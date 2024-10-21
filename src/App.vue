@@ -1,9 +1,13 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import HelloWorld from './components/HelloWorld.vue';
+import { useThemeStore } from './stores/theme';
+
+const theme = useThemeStore();
 </script>
 
 <template>
+  <div :class="[theme.theme]" class="app">
   <header>
     <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
 
@@ -18,7 +22,27 @@ import HelloWorld from './components/HelloWorld.vue'
   </header>
 
   <RouterView />
+  </div>
 </template>
+
+<style>
+  :root .dark {
+    --text: #e2e8f0;
+    --bg: rgb(16, 25, 44);
+  }
+
+  :root .light {
+    --text: #334155;
+    --bg: #fff;
+  }
+
+  .app {
+    background-color: var(--bg);
+    color: var(--text);
+    width: 100%;
+    min-height: 100vh;
+  }
+</style>
 
 <style scoped>
 header {
