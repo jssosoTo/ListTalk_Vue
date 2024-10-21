@@ -1,109 +1,87 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue';
-import { useThemeStore } from './stores/theme';
+import { RouterView } from 'vue-router'
+import { useThemeStore } from './stores/theme'
+import { ref } from 'vue'
+import HeaderItem from './components/HeaderItem.vue'
+import AddListContainer from './components/AddListContainer.vue'
 
-const theme = useThemeStore();
+const theme = useThemeStore()
+const isNavShow = ref(true)
+
+function toggleNav() {
+  isNavShow.value = !isNavShow.value
+}
 </script>
 
 <template>
-  <div :class="[theme.theme]" class="app">
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
+  <div :class="[theme.theme]" class="app flex">
+    <nav class="flex flex-col" :class="[isNavShow ? 'p-3 w-72' : 'pt-3']">
+      <HeaderItem :isNavShow :toggleNav />
+      <AddListContainer :style="{ display: isNavShow ? 'flex' : 'none' }" />
+    </nav>
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
+    <div class="flex-1">
+      <div class="w-1/2 mx-auto">
+        <RouterView />
+      </div>
     </div>
-  </header>
-
-  <RouterView />
   </div>
 </template>
 
 <style>
-  :root .dark {
-    --text: #e2e8f0;
-    --bg: rgb(16, 25, 44);
-  }
-
-  :root .light {
-    --text: #334155;
-    --bg: #fff;
-  }
-
-  .app {
-    background-color: var(--bg);
-    color: var(--text);
-    width: 100%;
-    min-height: 100vh;
-  }
-</style>
-
-<style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
+:root .dark {
+  --text: #e2e8f0;
+  --bg: rgb(16, 25, 44);
+  --shade-bg: rgba(240, 240, 240, 0.1);
+  --nav-bg: #1e293b;
+  --btn-color: #334155;
+  --btn-text: #fff;
+  --shade-text: #676767;
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
+:root .light {
+  --text: #334155;
+  --bg: #fff;
+  --shade-bg: rgba(16, 25, 44, 0.1);
+  --nav-bg: #fcfaf8;
+  --btn-color: #0f172a;
+  --btn-text: #fff;
+  --shade-text: #aaaaaa;
+}
+
+.btn {
+  background-color: var(--btn-color);
+  color: var(--btn-text);
+}
+
+.app {
+  background-color: var(--bg);
+  color: var(--text);
+  width: 100%;
+  min-height: 100vh;
 }
 
 nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
+  width: 0;
+  background-color: var(--nav-bg);
+  transition: all 0.3s;
+}
+</style>
+
+<style scoped>
+button {
+  position: relative;
 }
 
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
+button:hover::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 150%;
+  height: 150%;
+  border-radius: 5px;
+  background-color: var(--shade-bg);
 }
 </style>
