@@ -37,7 +37,7 @@ const theme = useThemeStore()
       </button>
       <button
         @click="toggleNav"
-        style="z-index: 99"
+        style="z-index: 1"
         :class="{ 'ml-3': !isNavShow }"
       >
         <LuPanelLeft />

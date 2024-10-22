@@ -9,13 +9,17 @@ import ListItem from './ListItem.vue'
 import { EpAlarmClock } from 'vue-icons-plus/ep'
 import { useRoute } from 'vue-router'
 import { GiRecycle } from 'vue-icons-plus/gi'
+import { useMaskStore } from '@/stores/mask'
+import Mask from '@/Mask.vue'
+import Modal from './Modal.vue'
 
 const route = useRoute()
+const maskStore = useMaskStore()
 </script>
 
 <template>
   <main class="flex-1 mt-3 flex flex-col gap-1">
-    <div class="flex justify-center gap-2 btn">
+    <div class="flex justify-center gap-2 btn" @click="maskStore.openMask">
       <MdAddCircle style="color: #dc4c3e" />
       <span>添加任务</span>
     </div>
@@ -57,6 +61,8 @@ const route = useRoute()
         />
       </li>
     </ul>
+
+    <Mask><Modal /></Mask>
   </main>
 </template>
 

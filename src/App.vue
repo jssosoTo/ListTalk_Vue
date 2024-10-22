@@ -30,6 +30,11 @@ function toggleNav() {
 
 <style>
 :root .dark {
+  --shade-border-color: rgba(211, 211, 211, 0.3);
+  --main-color: #dc4c3e;
+  --main-g-color: #c3392c;
+  --second-color: #f5f5f5;
+  --second-g-color: #e5e5e5;
   --text: #e2e8f0;
   --bg: rgb(16, 25, 44);
   --shade-bg: rgba(240, 240, 240, 0.1);
@@ -40,6 +45,11 @@ function toggleNav() {
 }
 
 :root .light {
+  --shade-border-color: rgba(211, 211, 211, 0.4);
+  --main-color: #dc4c3e;
+  --main-g-color: #c3392c;
+  --second-color: #d5d5d5;
+  --second-g-color: #c5c5c5;
   --text: #334155;
   --bg: #fff;
   --shade-bg: rgba(16, 25, 44, 0.1);
@@ -52,6 +62,29 @@ function toggleNav() {
 .btn {
   background-color: var(--btn-color);
   color: var(--btn-text);
+}
+
+.cancel_btn {
+  background-color: var(--second-color);
+  padding: 0.25rem 0.6rem;
+  border-radius: 0.2rem;
+  color: var(--bg);
+}
+
+.cancel_btn:hover {
+  background-color: var(--second-g-color);
+}
+
+.submit_btn {
+  background-color: var(--main-color);
+  color: #fff;
+  padding: 0.25rem 0.6rem;
+  border-radius: 0.2rem;
+  transition: all 0.3s;
+}
+
+.submit_btn:hover {
+  background-color: var(--main-g-color);
 }
 
 .app {
