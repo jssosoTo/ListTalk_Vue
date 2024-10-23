@@ -193,13 +193,6 @@ select option {
   color: black;
 }
 
-.hr {
-  width: 100%;
-  height: 1px;
-  background-color: var(--shade-border-color);
-  margin: 1rem 0;
-}
-
 .btn {
   cursor: pointer;
   padding: 0.4rem 0.6rem;

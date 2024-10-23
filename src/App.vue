@@ -66,6 +66,13 @@ function toggleNav() {
   color: var(--btn-text);
 }
 
+.hr {
+  width: 100%;
+  height: 1px;
+  background-color: var(--shade-border-color);
+  margin: 1rem 0;
+}
+
 .cancel_btn {
   background-color: var(--second-color);
   padding: 0.25rem 0.6rem;

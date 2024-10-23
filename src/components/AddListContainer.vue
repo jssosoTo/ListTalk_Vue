@@ -12,14 +12,26 @@ import { GiRecycle } from 'vue-icons-plus/gi'
 import { useMaskStore } from '@/stores/mask'
 import Mask from '@/Mask.vue'
 import Modal from './Modal.vue'
+import Project from './Project.vue'
+import { ref } from 'vue'
 
 const route = useRoute()
 const maskStore = useMaskStore()
+const isModalShow = ref(false)
+
+function openModal() {
+  isModalShow.value = true
+  maskStore.openMask()
+}
+
+function closeModal() {
+  isModalShow.value = false
+}
 </script>
 
 <template>
   <main class="flex-1 mt-3 flex flex-col gap-1">
-    <div class="flex justify-center gap-2 btn" @click="maskStore.openMask">
+    <div class="flex justify-center gap-2 btn" @click="openModal">
       <MdAddCircle style="color: #dc4c3e" />
       <span>添加任务</span>
     </div>
@@ -61,8 +73,9 @@ const maskStore = useMaskStore()
         />
       </li>
     </ul>
+    <Project />
 
-    <Mask><Modal /></Mask>
+    <Mask v-if="isModalShow" @closeModal="closeModal"><Modal /></Mask>
   </main>
 </template>
 
