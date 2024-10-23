@@ -42,6 +42,7 @@ function toggleNav() {
   --btn-color: #334155;
   --btn-text: #fff;
   --shade-text: #676767;
+  --modal-bg: #334155;
 }
 
 :root .light {
@@ -57,6 +58,7 @@ function toggleNav() {
   --btn-color: #0f172a;
   --btn-text: #fff;
   --shade-text: #aaaaaa;
+  --modal-bg: #fcfaf8;
 }
 
 .btn {

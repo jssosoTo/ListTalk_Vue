@@ -3,18 +3,34 @@ import { useMaskStore } from '@/stores/mask'
 import dayjs from 'dayjs'
 import { ref } from 'vue'
 import { BiSolidDownArrow } from 'vue-icons-plus/bi'
+import ContentModal from './ContentModal.vue'
+import ButtonModal from './ButtonModal.vue'
+import SelectItem from './SelectItem.vue'
 
 const modalInfo = ref({
   title: '',
   desc: '',
   endDate: dayjs().format('YYYY-MM-DD'),
   premier: 'p4',
+  associatePjt: '',
+  btnModalText: '',
 })
+const isPjtBtnModalOpen = ref(false)
 const maskStore = useMaskStore()
 
 function autoSize(e: Event) {
   const textarea: HTMLTextAreaElement = e.target as HTMLTextAreaElement
   textarea.style.height = textarea.scrollHeight + 'px'
+}
+
+function closeBtnModal() {
+  modalInfo.value.btnModalText = ''
+  isPjtBtnModalOpen.value = false
+}
+
+function selectPjt(value: string) {
+  modalInfo.value.associatePjt = value
+  console.log(value)
 }
 
 function submit() {
@@ -23,7 +39,7 @@ function submit() {
 </script>
 
 <template>
-  <form @click.stop @submit.prevent="submit" class="modal">
+  <form @click.stop="closeBtnModal" @submit.prevent="submit" class="modal">
     <main>
       <div class="headerTitle">
         <input v-model="modalInfo.title" placeholder="请输入标题" />
@@ -48,10 +64,48 @@ function submit() {
     </main>
     <div class="hr"></div>
     <footer class="flex items-center justify-between px-4">
-      <div class="btn flex items-center gap-2">
-        <span>我的工作</span>
-        <BiSolidDownArrow style="width: 0.65rem" />
-      </div>
+      <ContentModal>
+        <template v-slot:button>
+          <div
+            class="btn flex items-center gap-2"
+            @click.stop="isPjtBtnModalOpen = true"
+          >
+            <span>{{ modalInfo.associatePjt || '我的工作' }}</span>
+            <BiSolidDownArrow style="width: 0.65rem" />
+          </div>
+        </template>
+        <template v-slot:content v-if="isPjtBtnModalOpen">
+          <ButtonModal @click.stop>
+            <div class="p-2 w-60">
+              <input
+                type="text"
+                placeholder="请输入项目名称"
+                v-model="modalInfo.btnModalText"
+                style="outline: none; border-color: var(--shade-border-color)"
+                class="rounded w-full p-1 text-sm bg-transparent border border-solid"
+              />
+            </div>
+            <hr />
+            <div>
+              <h2 class="pl-2">我的项目</h2>
+              <div class="h-48 overflow-y-auto">
+                <SelectItem
+                  :pjtName="modalInfo.associatePjt"
+                  @selectPjt="selectPjt"
+                  id="1"
+                  title="1"
+                />
+                <SelectItem
+                  :pjtName="modalInfo.associatePjt"
+                  @selectPjt="selectPjt"
+                  id="2"
+                  title="2"
+                />
+              </div>
+            </div>
+          </ButtonModal>
+        </template>
+      </ContentModal>
 
       <div class="flex items-center gap-4">
         <button class="cancel_btn" @click="maskStore.closeMask">取消</button>
