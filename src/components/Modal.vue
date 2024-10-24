@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useMaskStore } from '@/stores/mask'
 import dayjs from 'dayjs'
 import { ref } from 'vue'
 import { BiSolidDownArrow } from 'vue-icons-plus/bi'
@@ -7,16 +6,21 @@ import ContentModal from './ContentModal.vue'
 import ButtonModal from './ButtonModal.vue'
 import SelectItem from './SelectItem.vue'
 
+const emit = defineEmits(['closeModal'])
+
+const projects = ref(JSON.parse(localStorage.getItem('projects') || '[]'))
 const modalInfo = ref({
   title: '',
   desc: '',
   endDate: dayjs().format('YYYY-MM-DD'),
   premier: 'p4',
-  associatePjt: '',
+  associatePjt: {
+    title: '',
+    value: '',
+  },
   btnModalText: '',
 })
 const isPjtBtnModalOpen = ref(false)
-const maskStore = useMaskStore()
 
 function autoSize(e: Event) {
   const textarea: HTMLTextAreaElement = e.target as HTMLTextAreaElement
@@ -28,9 +32,10 @@ function closeBtnModal() {
   isPjtBtnModalOpen.value = false
 }
 
-function selectPjt(value: string) {
-  modalInfo.value.associatePjt = value
-  console.log(value)
+function selectPjt(value: string, title: string) {
+  modalInfo.value.associatePjt.value = value
+  modalInfo.value.associatePjt.title = title
+  closeBtnModal()
 }
 
 function submit() {
@@ -70,7 +75,7 @@ function submit() {
             class="btn flex items-center gap-2"
             @click.stop="isPjtBtnModalOpen = true"
           >
-            <span>{{ modalInfo.associatePjt || '我的工作' }}</span>
+            <span>{{ modalInfo.associatePjt.title || '选择关联项目' }}</span>
             <BiSolidDownArrow style="width: 0.65rem" />
           </div>
         </template>
@@ -90,16 +95,12 @@ function submit() {
               <h2 class="pl-2">我的项目</h2>
               <div class="h-48 overflow-y-auto">
                 <SelectItem
-                  :pjtName="modalInfo.associatePjt"
+                  v-for="{ id, title } in projects"
+                  :key="id"
+                  :pjtName="modalInfo.associatePjt.value"
                   @selectPjt="selectPjt"
-                  id="1"
-                  title="1"
-                />
-                <SelectItem
-                  :pjtName="modalInfo.associatePjt"
-                  @selectPjt="selectPjt"
-                  id="2"
-                  title="2"
+                  :id
+                  :title
                 />
               </div>
             </div>
@@ -108,7 +109,7 @@ function submit() {
       </ContentModal>
 
       <div class="flex items-center gap-4">
-        <button class="cancel_btn" @click="maskStore.closeMask">取消</button>
+        <button class="cancel_btn" @click="emit('closeModal')">取消</button>
         <button type="submit" class="submit_btn">保存</button>
       </div>
     </footer>

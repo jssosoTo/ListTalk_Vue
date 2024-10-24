@@ -18,7 +18,7 @@ const emit = defineEmits(['selectPjt'])
 
 <template>
   <div
-    @click="emit('selectPjt', id)"
+    @click="emit('selectPjt', id, title)"
     class="px-4 py-1 transition-all"
     :class="{ selected: id === pjtName }"
   >

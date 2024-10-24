@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import Mask from '@/Mask.vue'
 import { useMaskStore } from '@/stores/mask'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { AiOutlinePlus } from 'vue-icons-plus/ai'
 import { useRoute } from 'vue-router'
 import ProjectModal from './ProjectModal.vue'
 import GlobalModal from './GlobalModal.vue'
+import { Fa6Hashtag } from 'vue-icons-plus/fa6'
+import ListItem from './ListItem.vue'
 
 const route = useRoute()
 const mask = useMaskStore()
@@ -19,24 +21,43 @@ function openModal() {
 
 function closeModal() {
   isModalShow.value = false
+  mask.closeMask()
 }
+
+watch(isModalShow, () => {
+  projects.value = JSON.parse(localStorage.getItem('projects') || '[]')
+})
 </script>
 
 <template>
-  <div class="mt-4">
-    <h2 class="flex items-center justify-between plusContainer">
+  <div class="mt-4 flex-1 overflow-hidden flex flex-col mb-4">
+    <h2 class="flex items-center justify-between plusContainer mx-3">
       <span># 我的项目</span>
       <button class="cursor-pointer plus hidden" @click="openModal">
         <AiOutlinePlus />
       </button>
     </h2>
-    <ul class="flex flex-col" style="margin-top: 0.5rem">
-      <li :class="{ activePath: route.path === '/today' }"></li>
+    <ul
+      class="flex-1 flex overflow-y-auto flex-col px-3"
+      style="margin-top: 0.5rem"
+    >
+      <li
+        v-for="{ id, path, title } in projects"
+        :key="id"
+        :class="{ activePath: route.path.includes(path) }"
+      >
+        <ListItem
+          :path="`/projects/${path}`"
+          :title="title"
+          :Icon="Fa6Hashtag"
+          :itemsNum="0"
+        />
+      </li>
     </ul>
   </div>
 
   <Mask v-if="isModalShow" @closeModal="closeModal">
-    <GlobalModal><ProjectModal /></GlobalModal>
+    <GlobalModal><ProjectModal @closeModal="closeModal" /></GlobalModal>
   </Mask>
 </template>
 

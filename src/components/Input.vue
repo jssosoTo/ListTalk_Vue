@@ -1,7 +1,7 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 
-defineProps({
+const { label, name } = defineProps({
   label: {
     type: String,
     required: true,
@@ -10,9 +10,14 @@ defineProps({
     type: String,
     required: true,
   },
+  value: {
+    type: String,
+    required: true,
+  },
 })
 
 const inputRef = ref()
+const model = defineModel()
 
 function clickInput() {
   inputRef.value.focus()
@@ -21,10 +26,18 @@ function clickInput() {
 
 <template>
   <div class="relative inputContainer" @click="clickInput">
-    <input ref="inputRef" class="p-2 input" type="text" :name :id="name" />
+    <input
+      v-model="model"
+      ref="inputRef"
+      class="p-2 input"
+      type="text"
+      :name
+      :id="name"
+    />
     <span
       @click="clickInput"
       class="label absolute left-2 top-1/2 -translate-y-1/2"
+      :class="{ top: inputRef?.value }"
       >{{ label }}</span
     >
   </div>
@@ -43,7 +56,8 @@ function clickInput() {
   border-color: var(--main-color);
 }
 
-.input:focus + .label {
+.input:focus + .label,
+.top {
   padding: 0 0.2rem;
   top: 0;
   font-size: 0.9rem;

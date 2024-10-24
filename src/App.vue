@@ -15,10 +15,10 @@ function toggleNav() {
 
 <template>
   <div :class="[theme.theme]" class="app flex">
-    <nav class="flex flex-col" :class="[isNavShow ? 'p-3 w-72' : 'pt-3']">
+    <aside class="flex flex-col" :class="[isNavShow ? 'w-72' : 'pt-3']">
       <HeaderItem :isNavShow :toggleNav />
       <AddListContainer :style="{ display: isNavShow ? 'flex' : 'none' }" />
-    </nav>
+    </aside>
 
     <div class="flex-1">
       <div class="w-1/2 mx-auto">
@@ -29,6 +29,10 @@ function toggleNav() {
 </template>
 
 <style>
+* {
+  box-sizing: border-box;
+}
+
 :root .dark {
   --shade-border-color: rgba(211, 211, 211, 0.3);
   --main-color: #dc4c3e;
@@ -59,6 +63,30 @@ function toggleNav() {
   --btn-text: #fff;
   --shade-text: #aaaaaa;
   --modal-bg: #fcfaf8;
+}
+
+/* 自定义整个滚动条 */
+::-webkit-scrollbar {
+  width: 0; /* 设置滚动条的宽度 */
+}
+*:hover::-webkit-scrollbar {
+  width: 0.5em; /* 设置滚动条的宽度 */
+}
+
+/* 自定义滚动条轨道 */
+::-webkit-scrollbar-track {
+  background: transparent; /* 设置轨道的背景颜色 */
+}
+
+/* 自定义滚动条的滑块（thumb） */
+::-webkit-scrollbar-thumb {
+  background-color: #555; /* 设置滑块的背景颜色 */
+  border-radius: 1000px;
+}
+
+/* 当滑块悬停或活动时自定义 */
+::-webkit-scrollbar-thumb:hover {
+  background-color: #555; /* 设置滑块在悬停状态下的背景颜色 */
 }
 
 .btn {
@@ -101,9 +129,10 @@ function toggleNav() {
   color: var(--text);
   width: 100%;
   min-height: 100vh;
+  height: 100vh;
 }
 
-nav {
+aside {
   width: 0;
   background-color: var(--nav-bg);
   transition: all 0.3s;

@@ -30,16 +30,16 @@ function closeModal() {
 </script>
 
 <template>
-  <main class="flex-1 mt-3 flex flex-col gap-1">
-    <div class="flex justify-center gap-2 btn" @click="openModal">
+  <main class="flex-1 overflow-hidden mt-3 flex flex-col gap-1">
+    <div class="flex justify-center gap-2 btn mx-3" @click="openModal">
       <MdAddCircle style="color: #dc4c3e" />
       <span>添加任务</span>
     </div>
-    <div class="flex items-center searchBtn">
+    <div class="flex items-center searchBtn mx-3">
       <BsSearchHeartFill style="width: 0.98rem" />
       <input class="flex-1 search" placeholder="搜索" />
     </div>
-    <ul class="flex flex-col gap-2" style="margin-top: 0.5rem">
+    <ul class="flex flex-col gap-2 mx-3" style="margin-top: 0.5rem">
       <li :class="{ activePath: route.path === '/today' }">
         <ListItem
           path="/today"
@@ -75,7 +75,9 @@ function closeModal() {
     </ul>
     <Project />
 
-    <Mask v-if="isModalShow" @closeModal="closeModal"><Modal /></Mask>
+    <Mask v-if="isModalShow" @closeModal="closeModal"
+      ><Modal @closeModal="closeModal"
+    /></Mask>
   </main>
 </template>
 

@@ -21,7 +21,7 @@ const theme = useThemeStore()
 </script>
 
 <template>
-  <header class="flex items-center justify-between">
+  <header class="flex items-center justify-between p-3 pb-0">
     <section class="flex gap-3 items-center" :class="{ hidden: !isNavShow }">
       <img class="w-8 h-8 rounded" :src="Logo" alt="logo" />
       <h1><RouterLink to="/">ListTalk</RouterLink></h1>
