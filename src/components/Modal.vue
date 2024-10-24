@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import dayjs from 'dayjs'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { BiSolidDownArrow } from 'vue-icons-plus/bi'
 import ContentModal from './ContentModal.vue'
 import ButtonModal from './ButtonModal.vue'
@@ -41,6 +41,13 @@ function selectPjt(value: string, title: string) {
 function submit() {
   console.log(modalInfo.value, 'submit')
 }
+
+const filterProjects = computed(() => {
+  if (!modalInfo.value.btnModalText) return projects.value
+  return projects.value.filter(({ title }: { title: string }) =>
+    title.includes(modalInfo.value.btnModalText),
+  )
+})
 </script>
 
 <template>
@@ -95,7 +102,7 @@ function submit() {
               <h2 class="pl-2">我的项目</h2>
               <div class="h-48 overflow-y-auto">
                 <SelectItem
-                  v-for="{ id, title } in projects"
+                  v-for="{ id, title } in filterProjects"
                   :key="id"
                   :pjtName="modalInfo.associatePjt.value"
                   @selectPjt="selectPjt"
