@@ -10,7 +10,7 @@ npm install
 
 ## Stack & tools
 
-`Vue3` `Pinia` `TailWindCSS` `Vue Router` `Day.js` `Vue Icons`
+`Vue3` `Pinia` `TailWindCSS` `Vue Router` `Day.js` `Vue Icons` `Vite`
 
 ### Compile and Hot-Reload for Development
 
