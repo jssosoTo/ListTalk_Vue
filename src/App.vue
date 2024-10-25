@@ -21,9 +21,7 @@ function toggleNav() {
     </aside>
 
     <div class="flex-1">
-      <div class="w-1/2 mx-auto">
-        <RouterView />
-      </div>
+      <RouterView />
     </div>
   </div>
 </template>
