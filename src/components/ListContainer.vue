@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import Mask from '@/Mask.vue'
 import { useMaskStore } from '@/stores/mask'
-import { ref } from 'vue'
+import { provide, ref, watch } from 'vue'
 import { AiOutlinePlus } from 'vue-icons-plus/ai'
 import { SiTicktick } from 'vue-icons-plus/si'
 import Modal from './Modal.vue'
 import Divider from './Divider.vue'
+import Dream from '@/assets/Dream.png'
 
 defineProps({
   title: {
@@ -16,6 +17,7 @@ defineProps({
     type: Boolean,
   },
 })
+const emit = defineEmits(['reload'])
 
 const maskStore = useMaskStore()
 const isModalShow = ref(false)
@@ -27,7 +29,12 @@ function openModal() {
 
 function closeModal() {
   isModalShow.value = false
+  maskStore.closeMask()
 }
+
+watch(isModalShow, () => {
+  emit('reload')
+})
 </script>
 
 <template>
@@ -50,9 +57,21 @@ function closeModal() {
           <span>添加任务</span>
         </div>
       </div>
-      <Divider class="my-4" />
-      <div class="flex-1">
-        <slot></slot>
+      <Divider class="mt-4" />
+      <div class="flex-1 lists">
+        <slot>
+          <div class="mt-8">
+            <div class="flex justify-center">
+              <img :src="Dream" width="294" height="267" />
+            </div>
+            <div>
+              <h2 class="text-center text-xl font-extrabold">
+                To do or not to do
+              </h2>
+              <h4 class="text-center text-gray-400">添加任务来开始你的项目</h4>
+            </div>
+          </div>
+        </slot>
       </div>
     </main>
 
@@ -112,5 +131,11 @@ function closeModal() {
 .addBtn button svg {
   width: 1.1rem;
   height: 1.1rem;
+}
+</style>
+
+<style>
+.lists > div:not(:last-child) {
+  border-bottom: 1px solid var(--shade-border-color);
 }
 </style>

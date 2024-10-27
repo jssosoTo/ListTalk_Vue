@@ -5,21 +5,28 @@ import { BiSolidDownArrow } from 'vue-icons-plus/bi'
 import ContentModal from './ContentModal.vue'
 import ButtonModal from './ButtonModal.vue'
 import SelectItem from './SelectItem.vue'
+import { useReloadStore } from '@/stores/reload'
+import { useMaskStore } from '@/stores/mask'
 
 const emit = defineEmits(['closeModal'])
+const initialValues = useMaskStore().initialValues
+
+console.log(initialValues)
 
 const projects = ref(JSON.parse(localStorage.getItem('projects') || '[]'))
 const modalInfo = ref({
   title: '',
   desc: '',
-  endDate: dayjs().format('YYYY-MM-DD'),
-  premier: 'p4',
+  date: dayjs().format('YYYY-MM-DD'),
+  premier: 'forth',
   associatePjt: {
     title: '',
     value: '',
   },
   btnModalText: '',
+  ...initialValues,
 })
+const reload = useReloadStore().reload
 const isPjtBtnModalOpen = ref(false)
 
 function autoSize(e: Event) {
@@ -39,7 +46,17 @@ function selectPjt(value: string, title: string) {
 }
 
 function submit() {
-  console.log(modalInfo.value, 'submit')
+  if (!modalInfo.value.title) return false
+  const { btnModalText: _, associatePjt: type, ...params } = modalInfo.value
+  const storeList = JSON.parse(localStorage.getItem('allLists') || '[]')
+  storeList.push({
+    id: Date.now(),
+    type,
+    ...params,
+  })
+  localStorage.setItem('allLists', JSON.stringify(storeList))
+  emit('closeModal')
+  reload()
 }
 
 const filterProjects = computed(() => {
@@ -65,12 +82,12 @@ const filterProjects = computed(() => {
         ></textarea>
       </div>
       <div class="flex items-stretch gap-2 mt-2">
-        <input v-model="modalInfo.endDate" type="date" />
+        <input v-model="modalInfo.date" type="date" />
         <select v-model="modalInfo.premier">
-          <option value="p1">优先级1</option>
-          <option value="p2">优先级2</option>
-          <option value="p3">优先级3</option>
-          <option value="p4">优先级4</option>
+          <option value="first">优先级1</option>
+          <option value="second">优先级2</option>
+          <option value="third">优先级3</option>
+          <option value="forth">优先级4</option>
         </select>
       </div>
     </main>
