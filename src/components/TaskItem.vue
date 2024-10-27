@@ -1,24 +1,107 @@
 <script setup lang="ts">
+import Mask from '@/Mask.vue'
+import dayjs from 'dayjs'
+import { computed, ref } from 'vue'
 import { BiCheckCircle, BiCircle } from 'vue-icons-plus/bi'
+import { BsFillFlagFill } from 'vue-icons-plus/bs'
+import { CgCalendarDates } from 'vue-icons-plus/cg'
+import Modal from './Modal.vue'
+import { useMaskStore } from '@/stores/mask'
+
+const { id, title, desc, date, premier } = defineProps({
+  id: {
+    type: Number,
+    required: true,
+  },
+  title: {
+    type: String,
+    required: true,
+  },
+  desc: {
+    type: String,
+    required: true,
+  },
+  date: {
+    type: Number,
+    required: true,
+  },
+  premier: {
+    required: true,
+  },
+})
+
+const maskStore = useMaskStore()
+const isModalShow = ref(false)
+
+function openModal() {
+  isModalShow.value = true
+  maskStore.openMask({
+    id,
+    title,
+    desc,
+    date,
+    premier,
+  })
+}
+
+function closeModal() {
+  isModalShow.value = false
+  maskStore.closeMask()
+}
+
+const dateText = computed(() => {
+  const today = dayjs().format('YYYY年MM月DD日')
+  const taskDate = dayjs(date).format('YYYY年MM月DD日')
+  return today === taskDate ? '今天' : taskDate.slice(4)
+})
+const premierText = computed(() => {
+  const premierTextObj = {
+    first: '优先级1',
+    second: '优先级2',
+    third: '优先级3',
+    forth: '优先级4',
+  }
+
+  return premierTextObj[premier]
+})
 </script>
 
 <template>
-  <div>
+  <div class="py-2" @click.stop>
     <div class="flex items-center gap-2">
       <button class="checkBtn">
         <BiCheckCircle class="w-0 h-0 check" />
         <BiCircle class="circle" />
       </button>
-      <h4 class="overflow-hidden whitespace-nowrap text-ellipsis text-lg">
-        十大阿萨是的阿萨德阿萨德as打算打算打算阿达是的asas阿萨是是大啊阿达啊飒飒收到萨达撒大声地撒旦撒阿斯达
+      <h4
+        @click="openModal"
+        class="flex-1 overflow-hidden whitespace-nowrap text-ellipsis text-lg cursor-pointer"
+      >
+        {{ title }}
       </h4>
     </div>
-    <div class="content">
+    <div @click="openModal" class="content cursor-pointer">
       <p class="overflow-hidden whitespace-nowrap text-ellipsis">
-        ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss
-        ssssssssssssssssssssssss ssssssssssssssssss
+        {{ desc }}
       </p>
+      <div class="w-full flex items-center tags gap-3">
+        <div
+          class="flex items-center gap-1"
+          :title="dayjs(date).format('YYYY年MM月DD日')"
+        >
+          <CgCalendarDates /><span>
+            {{ dateText }}
+          </span>
+        </div>
+        <div class="flex items-center gap-1">
+          <BsFillFlagFill :class="premier" /><span>{{ premierText }}</span>
+        </div>
+      </div>
     </div>
+
+    <Mask v-if="isModalShow" @closeModal="closeModal"
+      ><Modal @closeModal="closeModal"
+    /></Mask>
   </div>
 </template>
 
@@ -53,5 +136,29 @@ import { BiCheckCircle, BiCircle } from 'vue-icons-plus/bi'
 
 .content p {
   color: var(--shade-text);
+}
+
+.tags {
+  font-size: 0.8rem;
+}
+
+.tags svg {
+  width: 0.95rem;
+}
+
+.first {
+  color: #d1453b;
+}
+
+.second {
+  color: #eb8909;
+}
+
+.third {
+  color: #246fe0;
+}
+
+.forth {
+  color: #f3f3f3;
 }
 </style>
