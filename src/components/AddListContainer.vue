@@ -26,6 +26,7 @@ function openModal() {
 
 function closeModal() {
   isModalShow.value = false
+  maskStore.closeMask()
 }
 </script>
 
