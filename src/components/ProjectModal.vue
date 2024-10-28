@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import Input from './Input.vue'
+import { useAlertStore } from '@/stores/alert'
 const emit = defineEmits(['closeModal'])
 const inputInfo = ref({
   title: '',
   detail: '',
 })
+const alertStore = useAlertStore()
 
 function handleSubmit() {
   if (!inputInfo.value.title) {
@@ -26,7 +28,7 @@ function handleSubmit() {
         },
       ]),
     )
-    console.log('添加完成')
+    alertStore.openAlert('项目新增成功')
     emit('closeModal')
   }
 }

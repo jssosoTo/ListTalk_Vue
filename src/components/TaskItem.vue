@@ -8,7 +8,7 @@ import { CgCalendarDates } from 'vue-icons-plus/cg'
 import Modal from './Modal.vue'
 import { useMaskStore } from '@/stores/mask'
 
-const { id, title, desc, date, premier } = defineProps({
+const { id, title, desc, date, premier, type } = defineProps({
   id: {
     type: Number,
     required: true,
@@ -28,7 +28,11 @@ const { id, title, desc, date, premier } = defineProps({
   premier: {
     required: true,
   },
+  type: {
+    required: true,
+  },
 })
+const emit = defineEmits(['checkedItem'])
 
 const maskStore = useMaskStore()
 const isModalShow = ref(false)
@@ -41,6 +45,7 @@ function openModal() {
     desc,
     date,
     premier,
+    associatePjt: type,
   })
 }
 
@@ -52,7 +57,7 @@ function closeModal() {
 const dateText = computed(() => {
   const today = dayjs().format('YYYY年MM月DD日')
   const taskDate = dayjs(date).format('YYYY年MM月DD日')
-  return today === taskDate ? '今天' : taskDate.slice(4)
+  return today === taskDate ? '今天' : taskDate.slice(5)
 })
 const premierText = computed(() => {
   const premierTextObj = {
@@ -69,7 +74,7 @@ const premierText = computed(() => {
 <template>
   <div class="py-2" @click.stop>
     <div class="flex items-center gap-2">
-      <button class="checkBtn">
+      <button class="checkBtn" @click="emit('checkedItem', id)">
         <BiCheckCircle class="w-0 h-0 check" />
         <BiCircle class="circle" />
       </button>

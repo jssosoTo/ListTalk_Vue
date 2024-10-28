@@ -7,11 +7,11 @@ import ButtonModal from './ButtonModal.vue'
 import SelectItem from './SelectItem.vue'
 import { useReloadStore } from '@/stores/reload'
 import { useMaskStore } from '@/stores/mask'
+import { useAlertStore } from '@/stores/alert'
 
 const emit = defineEmits(['closeModal'])
 const initialValues = useMaskStore().initialValues
-
-console.log(initialValues)
+const alertStore = useAlertStore()
 
 const projects = ref(JSON.parse(localStorage.getItem('projects') || '[]'))
 const modalInfo = ref({
@@ -48,13 +48,27 @@ function selectPjt(value: string, title: string) {
 function submit() {
   if (!modalInfo.value.title) return false
   const { btnModalText: _, associatePjt: type, ...params } = modalInfo.value
-  const storeList = JSON.parse(localStorage.getItem('allLists') || '[]')
-  storeList.push({
-    id: Date.now(),
-    type,
-    ...params,
-  })
+  let storeList = JSON.parse(localStorage.getItem('allLists') || '[]')
+  if (!modalInfo.value.id) {
+    storeList.push({
+      id: Date.now(),
+      type,
+      ...params,
+    })
+  } else {
+    storeList = storeList.map(item => {
+      if (item.id === modalInfo.value.id) {
+        return {
+          id: item.id,
+          type,
+          ...params,
+        }
+      }
+      return item
+    })
+  }
   localStorage.setItem('allLists', JSON.stringify(storeList))
+  alertStore.openAlert(modalInfo.value.id ? '任务编辑成功' : '任务新增成功')
   emit('closeModal')
   reload()
 }

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Mask from '@/Mask.vue'
 import { useMaskStore } from '@/stores/mask'
-import { provide, ref, watch } from 'vue'
+import { ref, watch } from 'vue'
 import { AiOutlinePlus } from 'vue-icons-plus/ai'
 import { SiTicktick } from 'vue-icons-plus/si'
 import Modal from './Modal.vue'
@@ -15,6 +15,10 @@ defineProps({
   },
   isTaskNumShow: {
     type: Boolean,
+  },
+  taskNum: {
+    type: Number,
+    required: true,
   },
 })
 const emit = defineEmits(['reload'])
@@ -47,7 +51,7 @@ watch(isModalShow, () => {
           v-if="isTaskNumShow"
           class="flex items-center gap-2 pl-1 shade-text"
         >
-          <SiTicktick class="w-3" /><span> {{ 8 }}个任务 </span>
+          <SiTicktick class="w-3" /><span> {{ taskNum }}个任务 </span>
         </div>
         <div
           class="inline-flex items-center gap-2 mt-2 addBtn cursor-pointer"
