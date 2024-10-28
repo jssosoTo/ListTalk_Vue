@@ -4,8 +4,12 @@ import { useThemeStore } from './stores/theme'
 import { ref } from 'vue'
 import HeaderItem from './components/HeaderItem.vue'
 import AddListContainer from './components/AddListContainer.vue'
+import Alert from './components/Alert.vue'
+import Confirm from './components/Confirm.vue'
+import { useAlertStore } from './stores/alert'
 
 const theme = useThemeStore()
+const alertStore = useAlertStore()
 const isNavShow = ref(true)
 
 function toggleNav() {
@@ -15,7 +19,11 @@ function toggleNav() {
 
 <template>
   <div :class="[theme.theme]" class="app flex">
-    <aside class="flex flex-col" :class="[isNavShow ? 'w-72' : 'pt-3']">
+    <aside
+      @click="alertStore.openAlert('test', true)"
+      class="flex flex-col"
+      :class="[isNavShow ? 'w-72' : 'pt-3']"
+    >
       <HeaderItem :isNavShow :toggleNav />
       <AddListContainer :style="{ display: isNavShow ? 'flex' : 'none' }" />
     </aside>
@@ -23,6 +31,9 @@ function toggleNav() {
     <div class="flex-1">
       <RouterView />
     </div>
+
+    <Alert />
+    <Confirm />
   </div>
 </template>
 
