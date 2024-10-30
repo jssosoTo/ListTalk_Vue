@@ -29,6 +29,7 @@ const { id, title, desc, date, premier, type } = defineProps({
     required: true,
   },
   type: {
+    type: Object,
     required: true,
   },
 })
@@ -45,7 +46,7 @@ function openModal() {
     desc,
     date,
     premier,
-    associatePjt: type,
+    associatePjt: { ...type },
   })
 }
 
@@ -74,7 +75,7 @@ const premierText = computed(() => {
 <template>
   <div class="py-2" @click.stop>
     <div class="flex items-center gap-2">
-      <button class="checkBtn" @click="emit('checkedItem', id)">
+      <button class="checkBtn" @click.stop="emit('checkedItem', id)">
         <BiCheckCircle class="w-0 h-0 check" />
         <BiCircle class="circle" />
       </button>
