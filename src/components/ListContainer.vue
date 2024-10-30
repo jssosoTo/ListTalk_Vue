@@ -107,6 +107,10 @@ watch(isModalShow, () => {
   color: var(--main-color);
 }
 
+.addBtn:hover button svg {
+  color: white;
+}
+
 .addBtn:hover button {
   position: relative;
   z-index: 1;
