@@ -1,21 +1,24 @@
 <script setup lang="ts">
 import ListContainer from '@/components/ListContainer.vue'
 import TaskItem from '@/components/TaskItem.vue'
+import { useAlertStore } from '@/stores/alert'
 import { useReloadStore } from '@/stores/reload'
 import { computed, ref } from 'vue'
 
 const lists = ref(JSON.parse(localStorage.getItem('allLists') || '[]'))
 const reloadStore = useReloadStore()
+const alertStore = useAlertStore()
 
 function reload() {
   lists.value = JSON.parse(localStorage.getItem('allLists') || '[]')
 }
 
-function checkedItem(id) {
+function checkedItem(id: number) {
   const newLists = lists.value.slice()
   newLists.find(item => item.id === id).checked = true
-  localStorage.setItem('allLists', newLists)
+  localStorage.setItem('allLists', JSON.stringify(newLists))
   lists.value = newLists
+  alertStore.openAlert('1个任务已完成', id)
 }
 
 reloadStore.changeReload(reload)
@@ -37,7 +40,7 @@ const sortLists = computed(() => {
 <template>
   <ListContainer
     title="今天"
-    :task-num="lists.length"
+    :task-num="sortLists.length"
     @reload="reload"
     :is-task-num-show="true"
   >
