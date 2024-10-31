@@ -14,6 +14,7 @@ import Mask from '@/Mask.vue'
 import Modal from './Modal.vue'
 import Project from './Project.vue'
 import { ref } from 'vue'
+import { SiAboutdotme } from 'vue-icons-plus/si'
 
 const route = useRoute()
 const maskStore = useMaskStore()
@@ -70,6 +71,14 @@ function closeModal() {
           path="/calendar"
           title="日历"
           :Icon="BsCalendar2Date"
+          :itemsNum="0"
+        />
+      </li>
+      <li :class="{ activePath: route.path === '/about' }">
+        <ListItem
+          path="/about"
+          title="关于 - 应用以及作者"
+          :Icon="SiAboutdotme"
           :itemsNum="0"
         />
       </li>
