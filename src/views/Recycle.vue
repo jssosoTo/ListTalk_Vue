@@ -47,10 +47,12 @@ const isTrashModalOpen = ref(false)
     </div>
     <table class="flex-1 w-full text-left overflow-y-auto relative">
       <thead class="sticky -top-8 header">
-        <th>日期</th>
-        <th>标题</th>
-        <th>完成日期</th>
-        <th>操作</th>
+        <tr>
+          <th>日期</th>
+          <th>标题</th>
+          <th>完成日期</th>
+          <th>操作</th>
+        </tr>
       </thead>
       <tbody>
         <tr v-for="n in 20">
