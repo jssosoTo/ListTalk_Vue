@@ -23,7 +23,7 @@ export const useAlertStore = defineStore('alert', () => {
     isHidden.value = false
   }
 
-  function openAlert(text: string, id?: number, hidden?: boolean) {
+  function openAlert(text: string, id?: number | null, hidden?: boolean) {
     if (timeoutId?.value) clearTimeout(timeoutId.value)
     isHidden.value = false
     message.value = text
