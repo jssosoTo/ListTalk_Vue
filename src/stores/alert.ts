@@ -8,6 +8,7 @@ export const useAlertStore = defineStore('alert', () => {
   const message = ref('')
   const timeoutId = ref<number | null>(null)
   const isConfirm = ref(false)
+  const isHidden = ref(false)
   const confirmId = ref<number | null>(null)
 
   function closeAlert(confirmType?: number | null) {
@@ -19,15 +20,18 @@ export const useAlertStore = defineStore('alert', () => {
     confirmId.value = null
     message.value = ''
     timeoutId.value = null
+    isHidden.value = false
   }
 
-  function openAlert(text: string, id?: number) {
+  function openAlert(text: string, id?: number, hidden?: boolean) {
     if (timeoutId?.value) clearTimeout(timeoutId.value)
+    isHidden.value = false
     message.value = text
     if (id) {
       isConfirm.value = true
       confirmId.value = id
       isAlertShow.value = false
+      if (hidden) isHidden.value = true
     } else {
       isAlertShow.value = true
       isConfirm.value = false
@@ -50,5 +54,6 @@ export const useAlertStore = defineStore('alert', () => {
     message,
     isConfirm,
     withdrawOperation,
+    isHidden,
   }
 })

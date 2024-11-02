@@ -18,11 +18,15 @@ const alertStore = useAlertStore()
       <span>{{ alertStore.message }}</span>
       <span
         class="withdraw cursor-pointer"
+        :class="{ hidden: alertStore.isHidden }"
         style="color: var(--main-g-color)"
         @click="alertStore.withdrawOperation"
         >撤销</span
       >
-      <AiOutlineClose class="cursor-pointer close" />
+      <AiOutlineClose
+        @click="alertStore.closeAlert"
+        class="cursor-pointer close"
+      />
     </div>
   </AlertMask>
 </template>
