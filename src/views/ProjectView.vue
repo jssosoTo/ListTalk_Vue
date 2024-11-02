@@ -8,6 +8,7 @@ import { useRoute } from 'vue-router'
 
 const route = useRoute()
 const id = ref(route.params.id)
+const projects = JSON.parse(localStorage.getItem('projects') || '[]')
 const lists = ref(JSON.parse(localStorage.getItem('allLists') || '[]'))
 const reloadStore = useReloadStore()
 const alertStore = useAlertStore()
@@ -39,6 +40,10 @@ const sortLists = computed(() => {
     .sort((a, b) => premierNum[a.premier] - premierNum[b.premier])
 })
 
+const title = computed(
+  () => projects.find(item => item.id === +id.value)?.title,
+)
+
 watch(
   () => route.params.id,
   () => {
@@ -49,7 +54,7 @@ watch(
 
 <template :key="id">
   <ListContainer
-    title="今天"
+    :title
     :task-num="sortLists.length"
     @reload="reload"
     :is-task-num-show="true"
