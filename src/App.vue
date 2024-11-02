@@ -70,9 +70,6 @@ function toggleNav() {
 
 /* 自定义整个滚动条 */
 ::-webkit-scrollbar {
-  width: 0; /* 设置滚动条的宽度 */
-}
-*:hover::-webkit-scrollbar {
   width: 0.5em; /* 设置滚动条的宽度 */
 }
 
@@ -83,8 +80,12 @@ function toggleNav() {
 
 /* 自定义滚动条的滑块（thumb） */
 ::-webkit-scrollbar-thumb {
-  background-color: #555; /* 设置滑块的背景颜色 */
+  background-color: transparent; /* 设置滑块的背景颜色 */
   border-radius: 1000px;
+}
+
+*:hover::-webkit-scrollbar-thumb {
+  background-color: #555; /* 设置滑块的背景颜色 */
 }
 
 /* 当滑块悬停或活动时自定义 */
