@@ -1,8 +1,10 @@
 <script setup lang="ts">
+import Confirm from '@/components/Confirm.vue'
 import ListContainer from '@/components/ListContainer.vue'
 import TaskItem from '@/components/TaskItem.vue'
 import { useAlertStore } from '@/stores/alert'
 import { useReloadStore } from '@/stores/reload'
+import dayjs from 'dayjs'
 import { computed, ref } from 'vue'
 
 const lists = ref(JSON.parse(localStorage.getItem('allLists') || '[]'))
@@ -15,7 +17,10 @@ function reload() {
 
 function checkedItem(id: number) {
   const newLists = lists.value.slice()
-  newLists.find(item => item.id === id).checked = true
+  const item = newLists.find(item => item.id === id)
+  item.checked = true
+  item.finishedTime = dayjs().format('YYYY-MM-DD HH:mm:ss')
+  item.clearTime = dayjs().add(30, 'days').format('YYYY-MM-DD HH:mm:ss')
   localStorage.setItem('allLists', JSON.stringify(newLists))
   lists.value = newLists
   alertStore.openAlert('1个任务已完成', id)
