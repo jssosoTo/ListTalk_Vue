@@ -40,7 +40,7 @@ onUnmounted(() => window.removeEventListener('click', closeModal))
               }
             "
           >
-            保存
+            确认
           </button>
         </div>
         <div class="arrow-circle"></div>
