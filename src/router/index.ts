@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import ProjectView from '@/views/ProjectView.vue'
 import Recycle from '@/views/Recycle.vue'
+import Calendar from '@/views/Calendar.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -20,6 +21,11 @@ const router = createRouter({
       path: '/recycle',
       name: 'recycle',
       component: Recycle,
+    },
+    {
+      path: '/calendar',
+      name: 'calendar',
+      component: Calendar,
     },
     {
       path: '/projects/:id',
