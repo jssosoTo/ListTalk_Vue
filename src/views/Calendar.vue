@@ -73,11 +73,13 @@ const dateArrs = computed(() => {
       class="flex-1 grid grid-cols-7 grid-rows-5 py-3 rounded-lg overflow-hidden"
     >
       <div
-        v-for="{ date, arr, text } in dateArrs"
+        v-for="({ date, arr, text }, i) in dateArrs"
         :key="date"
         class="flex flex-col border border-solid"
       >
-        <h6 class="text-center text-xs mt-1">{{ days[dayjs(date).day()] }}</h6>
+        <h6 class="text-center text-xs mt-1" v-if="i < 7">
+          {{ days[dayjs(date).day()] }}
+        </h6>
         <h4 class="text-center text-sm">{{ text }}</h4>
         <div class="flex-1" v-if="arr.length">{{ arr }}</div>
       </div>
