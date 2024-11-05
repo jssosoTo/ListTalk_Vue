@@ -1,11 +1,20 @@
 <script setup lang="ts">
+import CalendarItem from '@/components/CalendarItem.vue'
+import { useReloadStore } from '@/stores/reload'
 import dayjs from 'dayjs'
 import { computed, ref } from 'vue'
 import { EpArrowLeftBold, EpArrowRightBold } from 'vue-icons-plus/ep'
 
 const days = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
 const today = ref(dayjs())
+const thisDay = ref(dayjs().format('YYYY-MM-DD'))
+const reloadStore = useReloadStore()
 const allList = ref(JSON.parse(localStorage.getItem('allLists') || '[]'))
+
+function reload() {
+  allList.value = JSON.parse(localStorage.getItem('allLists') || '[]')
+}
+reloadStore.changeReload(reload)
 
 async function addHandler() {
   today.value = today.value.add(1, 'M')
@@ -80,14 +89,36 @@ const dateArrs = computed(() => {
         <h6 class="text-center text-xs mt-1" v-if="i < 7">
           {{ days[dayjs(date).day()] }}
         </h6>
-        <h4 class="text-center text-sm">{{ text }}</h4>
-        <div class="flex-1" v-if="arr.length">{{ arr }}</div>
+        <h4 class="text-center text-sm">
+          <span :class="{ today: thisDay === date }">{{ text }}</span>
+        </h4>
+        <TransitionGroup
+          tag="div"
+          class="calendarItem flex-1 pt-1 flex flex-col gap-1 overflow-y-auto"
+          name="calendarItem"
+          v-if="arr.length"
+        >
+          <CalendarItem
+            v-for="list in arr"
+            :key="list.id"
+            :id="list.id"
+            :title="list.title"
+            :desc="list.desc"
+            :date="list.date"
+            :premier="list.premier"
+            :type="list.type"
+          />
+        </TransitionGroup>
       </div>
     </main>
   </div>
 </template>
 
 <style scoped>
+.calendarItem::-webkit-scrollbar {
+  width: 0; /* 设置滚动条的宽度 */
+}
+
 .switch_btn svg {
   width: 1.2rem;
 }
@@ -113,5 +144,37 @@ const dateArrs = computed(() => {
   padding: 0.25rem 1rem;
   border: 1px solid var(--text);
   border-radius: 1000px;
+}
+
+.calendarItem-move,
+.calendarItem-enter-active,
+.calendarItem-leave-active {
+  transition: all 0.3s;
+}
+
+.calendarItem-leave-to,
+.calendarItem-enter-from {
+  opacity: 0;
+}
+
+.calendarItem-leave-active {
+  position: absolute;
+}
+
+.today {
+  position: relative;
+  z-index: 2;
+}
+
+.today::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 120%;
+  height: 120%;
+  border-radius: 50%;
+  background-color: var(--main-color);
+  transform: translate(-50%, -50%);
 }
 </style>

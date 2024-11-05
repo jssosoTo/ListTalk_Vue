@@ -911,6 +911,11 @@ video {
   padding-bottom: 1rem;
 }
 
+.px-1 {
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+}
+
 .pb-0 {
   padding-bottom: 0px;
 }
@@ -937,6 +942,10 @@ video {
 
 .pt-8 {
   padding-top: 2rem;
+}
+
+.pt-1 {
+  padding-top: 0.25rem;
 }
 
 .text-left {
