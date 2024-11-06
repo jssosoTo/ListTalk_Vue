@@ -89,8 +89,10 @@ const dateArrs = computed(() => {
         <h6 class="text-center text-xs mt-1" v-if="i < 7">
           {{ days[dayjs(date).day()] }}
         </h6>
-        <h4 class="text-center text-sm">
-          <span :class="{ today: thisDay === date }">{{ text }}</span>
+        <h4 class="text-center text-sm" :class="{ 'mt-2': i >= 7 }">
+          <span :class="{ today: thisDay === date }" :data-content="text">{{
+            text
+          }}</span>
         </h4>
         <TransitionGroup
           tag="div"
@@ -167,12 +169,13 @@ const dateArrs = computed(() => {
 }
 
 .today::before {
-  content: '';
+  content: attr(data-content);
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 120%;
-  height: 120%;
+  height: 140%;
+  aspect-ratio: 1;
+  line-height: 1.6;
   border-radius: 50%;
   background-color: var(--main-color);
   transform: translate(-50%, -50%);
