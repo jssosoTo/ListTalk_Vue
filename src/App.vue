@@ -34,6 +34,7 @@ function toggleNav() {
 <style>
 * {
   box-sizing: border-box;
+  overflow-x: hidden !important;
 }
 
 :root .dark {
