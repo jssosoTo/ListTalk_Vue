@@ -119,6 +119,10 @@ onMounted(async () => {
 </template>
 
 <style scoped>
+* {
+  overflow-x: hidden !important;
+}
+
 .header {
   font-family: 'Indie Flower', cursive;
 }
