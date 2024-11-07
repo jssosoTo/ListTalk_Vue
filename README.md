@@ -10,7 +10,8 @@ npm install
 
 ## About Project
 
-Project Version: 1.0.0
+Project Version: 1.0.0.
+
 this project has been completed. But I will review my code and inject TS completely more!
 
 ## Stack & tools
