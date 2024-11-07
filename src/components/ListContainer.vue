@@ -16,12 +16,15 @@ defineProps({
   isTaskNumShow: {
     type: Boolean,
   },
+  isDefineButton: {
+    type: Boolean,
+  },
   taskNum: {
     type: Number,
     required: true,
   },
 })
-const emit = defineEmits(['reload'])
+const emit = defineEmits(['reload', 'defineClick'])
 
 const maskStore = useMaskStore()
 const isModalShow = ref(false)
@@ -55,10 +58,15 @@ watch(isModalShow, () => {
         </div>
         <div
           class="inline-flex items-center gap-2 mt-2 addBtn cursor-pointer"
-          @click="openModal"
+          @click="!isDefineButton ? openModal : emit('defineClick')"
         >
-          <button><AiOutlinePlus /></button>
-          <span>添加任务</span>
+          <template v-if="!isDefineButton">
+            <button><AiOutlinePlus /></button>
+            <span>添加任务</span>
+          </template>
+          <template v-else>
+            <slot name="button"></slot>
+          </template>
         </div>
       </div>
       <Divider class="mt-4" />

@@ -5,8 +5,10 @@ import { useAlertStore } from '@/stores/alert'
 import { useReloadStore } from '@/stores/reload'
 import dayjs from 'dayjs'
 import { computed, ref } from 'vue'
+import { SiTicktick } from 'vue-icons-plus/si'
 
 const lists = ref(JSON.parse(localStorage.getItem('allLists') || '[]'))
+const today = dayjs().format('YYYY-MM-DD')
 const reloadStore = useReloadStore()
 const alertStore = useAlertStore()
 
@@ -25,6 +27,24 @@ function checkedItem(id: number) {
   alertStore.openAlert('1个任务已完成', id)
 }
 
+function checkedAllItems() {
+  const newLists = lists.value.slice().map(list => {
+    if (list.date < today && !list.checked) {
+      return {
+        ...list,
+        finishedTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+        clearTime: dayjs().add(30, 'days').format('YYYY-MM-DD HH:mm:ss'),
+        checked: true,
+      }
+    }
+    return list
+  })
+
+  localStorage.setItem('allLists', JSON.stringify(newLists))
+  lists.value = newLists
+  alertStore.openAlert('全部过时任务都已完成', 6657, true)
+}
+
 reloadStore.changeReload(reload)
 
 const sortLists = computed(() => {
@@ -36,18 +56,24 @@ const sortLists = computed(() => {
   }
   return lists.value
     .slice()
-    .filter(item => !item.checked)
+    .filter(item => !item.checked && item.date < today)
     .sort((a, b) => premierNum[a.premier] - premierNum[b.premier])
 })
 </script>
 
 <template>
   <ListContainer
-    title="今天"
+    title="超时任务"
     :task-num="sortLists.length"
     @reload="reload"
     :is-task-num-show="true"
+    :is-define-button="true"
+    @define-click="checkedAllItems"
   >
+    <template #button>
+      <button><SiTicktick /></button>
+      <span>确认所有任务</span>
+    </template>
     <TaskItem
       v-for="list in sortLists"
       @checkedItem="checkedItem"

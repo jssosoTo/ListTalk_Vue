@@ -3,6 +3,8 @@ import HomeView from '../views/HomeView.vue'
 import ProjectView from '@/views/ProjectView.vue'
 import Recycle from '@/views/Recycle.vue'
 import Calendar from '@/views/Calendar.vue'
+import OutdateView from '@/views/OutdateView.vue'
+import Search from '@/views/Search.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -10,12 +12,22 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      redirect: '/today',
+      redirect: '/about',
+    },
+    {
+      path: '/search',
+      name: 'Search',
+      component: Search,
     },
     {
       path: '/today',
       name: 'Today',
       component: HomeView,
+    },
+    {
+      path: '/outdate',
+      name: 'Outdate',
+      component: OutdateView,
     },
     {
       path: '/recycle',

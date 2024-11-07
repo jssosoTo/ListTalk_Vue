@@ -45,6 +45,7 @@ export const useAlertStore = defineStore('alert', () => {
     localStorage.setItem('allLists', JSON.stringify(newItems))
     closeAlert(confirmId.value)
     reloadStore.reload()
+    reloadStore.permanentReload()
   }
 
   return {

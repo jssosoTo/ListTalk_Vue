@@ -13,11 +13,17 @@ import { useMaskStore } from '@/stores/mask'
 import Mask from '@/Mask.vue'
 import Modal from './Modal.vue'
 import Project from './Project.vue'
-import { ref } from 'vue'
+import { computed, ref, toValue } from 'vue'
 import { SiAboutdotme } from 'vue-icons-plus/si'
+import dayjs from 'dayjs'
+import { useReloadStore } from '@/stores/reload'
 
 const route = useRoute()
+const thisDate = ref(dayjs().format('YYYY-MM-DD'))
+const projects = ref(JSON.parse(localStorage.getItem('projects') || '[]'))
+const lists = ref(JSON.parse(localStorage.getItem('allLists') || '[]'))
 const maskStore = useMaskStore()
+const reloadStore = useReloadStore()
 const isModalShow = ref(false)
 
 function openModal() {
@@ -29,6 +35,40 @@ function closeModal() {
   isModalShow.value = false
   maskStore.closeMask()
 }
+
+function reload() {
+  projects.value = JSON.parse(localStorage.getItem('projects') || '[]')
+  lists.value = JSON.parse(localStorage.getItem('allLists') || '[]')
+}
+
+reloadStore.changePermanentReload(reload)
+
+const itemsNum = computed(() => {
+  const list = toValue(lists)
+  const project = toValue(projects)
+  const unChecked = list.filter(item => !item.checked)
+  const recycle = list.filter(item => item.checked).length
+  const today = unChecked.length
+  const outdate = unChecked.filter(item => item.date < thisDate.value).length
+  const projectsNum = Object.fromEntries(
+    project.map(item => [
+      item.id,
+      unChecked.reduce((acc, cur) => {
+        if (cur.type.value === item.id) {
+          acc += 1
+        }
+        return acc
+      }, 0),
+    ]),
+  )
+
+  return {
+    recycle,
+    today,
+    outdate,
+    projectsNum,
+  }
+})
 </script>
 
 <template>
@@ -37,17 +77,26 @@ function closeModal() {
       <MdAddCircle style="color: #dc4c3e" />
       <span>添加任务</span>
     </div>
-    <div class="flex items-center searchBtn mx-3">
+    <div v-if="false" class="flex items-center searchBtn mx-3">
       <BsSearchHeartFill style="width: 0.98rem" />
       <input class="flex-1 search" placeholder="搜索" />
     </div>
     <ul class="flex flex-col gap-2 mx-3" style="margin-top: 0.5rem">
+      <li :class="{ activePath: route.path === '/search' }">
+        <ListItem
+          path="/search"
+          title="搜索"
+          :Icon="BsSearchHeartFill"
+          :is-hidden-num="true"
+          :itemsNum="0"
+        />
+      </li>
       <li :class="{ activePath: route.path === '/today' }">
         <ListItem
           path="/today"
           title="今天"
           :Icon="BsCalendar3"
-          :itemsNum="8"
+          :itemsNum="itemsNum.today"
         />
       </li>
       <li :class="{ activePath: route.path === '/outdate' }">
@@ -55,7 +104,7 @@ function closeModal() {
           path="/outdate"
           title="超时任务"
           :Icon="EpAlarmClock"
-          :itemsNum="10"
+          :itemsNum="itemsNum.outdate"
         />
       </li>
       <li :class="{ activePath: route.path === '/recycle' }">
@@ -63,7 +112,7 @@ function closeModal() {
           path="/recycle"
           title="回收站"
           :Icon="GiRecycle"
-          :itemsNum="3"
+          :itemsNum="itemsNum.recycle"
         />
       </li>
       <li :class="{ activePath: route.path === '/calendar' }">
@@ -71,6 +120,7 @@ function closeModal() {
           path="/calendar"
           title="日历"
           :Icon="BsCalendar2Date"
+          :is-hidden-num="true"
           :itemsNum="0"
         />
       </li>
@@ -79,11 +129,12 @@ function closeModal() {
           path="/about"
           title="关于 - 应用以及作者"
           :Icon="SiAboutdotme"
+          :is-hidden-num="true"
           :itemsNum="0"
         />
       </li>
     </ul>
-    <Project />
+    <Project :itemsNum="itemsNum.projectsNum" />
 
     <Mask v-if="isModalShow" @closeModal="closeModal"
       ><Modal @closeModal="closeModal"

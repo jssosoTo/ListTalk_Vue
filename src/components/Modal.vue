@@ -26,7 +26,9 @@ const modalInfo = ref({
   btnModalText: '',
   ...initialValues,
 })
-const reload = useReloadStore().reload
+const reloadStore = useReloadStore()
+const reload = reloadStore.reload
+const permanentReload = reloadStore.permanentReload
 const isPjtBtnModalOpen = ref(false)
 
 function autoSize(e: Event) {
@@ -70,6 +72,7 @@ function submit() {
   localStorage.setItem('allLists', JSON.stringify(storeList))
   alertStore.openAlert(modalInfo.value.id ? '任务编辑成功' : '任务新增成功')
   emit('closeModal')
+  permanentReload()
   reload()
 }
 

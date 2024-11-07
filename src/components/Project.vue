@@ -9,6 +9,13 @@ import GlobalModal from './GlobalModal.vue'
 import { Fa6Hashtag } from 'vue-icons-plus/fa6'
 import ListItem from './ListItem.vue'
 
+defineProps({
+  itemsNum: {
+    type: Array<number>,
+    required: true,
+  },
+})
+
 const route = useRoute()
 const mask = useMaskStore()
 const projects = ref(JSON.parse(localStorage.getItem('projects') || '[]'))
@@ -50,7 +57,7 @@ watch(isModalShow, () => {
           :path="`/projects/${path}`"
           :title="title"
           :Icon="Fa6Hashtag"
-          :itemsNum="0"
+          :itemsNum="itemsNum[id]"
         />
       </li>
     </ul>

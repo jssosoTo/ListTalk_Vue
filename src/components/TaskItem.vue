@@ -7,6 +7,7 @@ import { BsFillFlagFill } from 'vue-icons-plus/bs'
 import { CgCalendarDates } from 'vue-icons-plus/cg'
 import Modal from './Modal.vue'
 import { useMaskStore } from '@/stores/mask'
+import { useReloadStore } from '@/stores/reload'
 
 const { id, title, desc, date, premier, type } = defineProps({
   id: {
@@ -36,6 +37,7 @@ const { id, title, desc, date, premier, type } = defineProps({
 const emit = defineEmits(['checkedItem'])
 
 const maskStore = useMaskStore()
+const reloadStore = useReloadStore()
 const isModalShow = ref(false)
 
 function openModal() {
@@ -75,7 +77,15 @@ const premierText = computed(() => {
 <template>
   <div class="py-2" @click.stop>
     <div class="flex items-center gap-2">
-      <button class="checkBtn" @click.stop="emit('checkedItem', id)">
+      <button
+        class="checkBtn"
+        @click.stop="
+          () => {
+            emit('checkedItem', id)
+            reloadStore.permanentReload()
+          }
+        "
+      >
         <BiCheckCircle class="w-0 h-0 check" />
         <BiCircle class="circle" />
       </button>

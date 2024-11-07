@@ -15,6 +15,9 @@ defineProps({
   Icon: {
     required: true,
   },
+  isHiddenNum: {
+    type: Boolean,
+  },
 })
 </script>
 
@@ -25,7 +28,9 @@ defineProps({
         <Icon style="width: 0.98rem" />
         <span>{{ title }}</span>
       </div>
-      <div class="num" style="color: var(--shade-text)">{{ itemsNum }}</div>
+      <div class="num" v-if="!isHiddenNum" style="color: var(--shade-text)">
+        {{ itemsNum }}
+      </div>
     </RouterLink>
   </div>
 </template>
