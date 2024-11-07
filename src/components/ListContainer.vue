@@ -58,7 +58,7 @@ watch(isModalShow, () => {
         </div>
         <div
           class="inline-flex items-center gap-2 mt-2 addBtn cursor-pointer"
-          @click="!isDefineButton ? openModal : emit('defineClick')"
+          @click="!isDefineButton ? openModal() : emit('defineClick')"
         >
           <template v-if="!isDefineButton">
             <button><AiOutlinePlus /></button>
