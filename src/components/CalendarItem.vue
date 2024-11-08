@@ -30,14 +30,14 @@ const { id, title, desc, date, premier, type } = defineProps({
   },
 })
 
-const isModalShow = ref(false)
+const isModalShow = ref<boolean>(false)
 const maskStore = useMaskStore()
 
 function closeModal() {
   isModalShow.value = false
   maskStore.closeMask()
 }
-console.log({ id, title, desc, date, premier, associatePjt: { ...type } })
+
 function openModal() {
   isModalShow.value = true
   maskStore.openMask({

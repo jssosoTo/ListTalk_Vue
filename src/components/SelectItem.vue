@@ -5,15 +5,17 @@ defineProps({
     required: true,
   },
   id: {
-    type: String,
+    type: Number,
     required: true,
   },
   pjtName: {
-    type: String,
+    type: Number,
     required: true,
   },
 })
-const emit = defineEmits(['selectPjt'])
+const emit = defineEmits<{
+  (e: 'selectPjt', id: number, title: string): void
+}>()
 </script>
 
 <template>

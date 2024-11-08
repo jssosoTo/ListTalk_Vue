@@ -3,10 +3,13 @@ import ListContainer from '@/components/ListContainer.vue'
 import TaskItem from '@/components/TaskItem.vue'
 import { useAlertStore } from '@/stores/alert'
 import { useReloadStore } from '@/stores/reload'
+import type { ListProp, PremierTypes } from '@/types'
 import dayjs from 'dayjs'
 import { computed, ref } from 'vue'
 
-const lists = ref(JSON.parse(localStorage.getItem('allLists') || '[]'))
+const lists = ref<ListProp[]>(
+  JSON.parse(localStorage.getItem('allLists') || '[]'),
+)
 const reloadStore = useReloadStore()
 const alertStore = useAlertStore()
 
@@ -15,8 +18,8 @@ function reload() {
 }
 
 function checkedItem(id: number) {
-  const newLists = lists.value.slice()
-  const item = newLists.find(item => item.id === id)
+  const newLists: ListProp[] = lists.value.slice()
+  const item = newLists.find(item => item.id === id) as ListProp
   item.checked = true
   item.finishedTime = dayjs().format('YYYY-MM-DD HH:mm:ss')
   item.clearTime = dayjs().add(30, 'days').format('YYYY-MM-DD HH:mm:ss')
@@ -27,7 +30,7 @@ function checkedItem(id: number) {
 
 reloadStore.changeReload(reload)
 
-const sortLists = computed(() => {
+const sortLists = computed<ListProp[]>(() => {
   const premierNum = {
     first: 1,
     second: 2,
@@ -37,7 +40,11 @@ const sortLists = computed(() => {
   return lists.value
     .slice()
     .filter(item => !item.checked)
-    .sort((a, b) => premierNum[a.premier] - premierNum[b.premier])
+    .sort(
+      (a: ListProp, b: ListProp) =>
+        premierNum[a.premier as PremierTypes] -
+        premierNum[b.premier as PremierTypes],
+    )
 })
 </script>
 

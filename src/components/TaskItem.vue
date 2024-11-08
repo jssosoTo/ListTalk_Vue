@@ -8,6 +8,7 @@ import { CgCalendarDates } from 'vue-icons-plus/cg'
 import Modal from './Modal.vue'
 import { useMaskStore } from '@/stores/mask'
 import { useReloadStore } from '@/stores/reload'
+import type { PremierTypes } from '@/types'
 
 const { id, title, desc, date, premier, type } = defineProps({
   id: {
@@ -23,7 +24,7 @@ const { id, title, desc, date, premier, type } = defineProps({
     required: true,
   },
   date: {
-    type: Number,
+    type: String,
     required: true,
   },
   premier: {
@@ -38,7 +39,7 @@ const emit = defineEmits(['checkedItem'])
 
 const maskStore = useMaskStore()
 const reloadStore = useReloadStore()
-const isModalShow = ref(false)
+const isModalShow = ref<boolean>(false)
 
 function openModal() {
   isModalShow.value = true
@@ -57,7 +58,7 @@ function closeModal() {
   maskStore.closeMask()
 }
 
-const dateText = computed(() => {
+const dateText = computed<string>(() => {
   const today = dayjs().format('YYYY年MM月DD日')
   const taskDate = dayjs(date).format('YYYY年MM月DD日')
   return today === taskDate ? '今天' : taskDate.slice(5)
@@ -70,7 +71,7 @@ const premierText = computed(() => {
     forth: '优先级4',
   }
 
-  return premierTextObj[premier]
+  return premierTextObj[premier as PremierTypes]
 })
 </script>
 

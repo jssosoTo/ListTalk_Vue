@@ -8,7 +8,7 @@ import Alert from './components/Alert.vue'
 import Confirm from './components/Confirm.vue'
 
 const theme = useThemeStore()
-const isNavShow = ref(true)
+const isNavShow = ref<boolean>(true)
 
 function toggleNav() {
   isNavShow.value = !isNavShow.value

@@ -1,8 +1,8 @@
-<script setup>
+<script setup lang="ts">
 import { useMaskStore } from '@/stores/mask'
 
 const maskStore = useMaskStore()
-const emit = defineEmits(['closeModal'])
+const emit = defineEmits<{ (e: 'closeModal'): void }>()
 </script>
 
 <template>

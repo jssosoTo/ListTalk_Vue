@@ -4,7 +4,12 @@ import { BsGithub } from 'vue-icons-plus/bs'
 import { ImMail4 } from 'vue-icons-plus/im'
 
 // https://api.github.com/users/${user.name}
-const author = ref(null)
+const author = ref<{
+  name: string
+  avatar_url: string
+  followers: number
+  html_url: string
+} | null>(null)
 
 onMounted(async () => {
   const res = await fetch(`https://api.github.com/users/jssosoTo`)

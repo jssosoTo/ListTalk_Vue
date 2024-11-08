@@ -2,8 +2,9 @@
 import { ref } from 'vue'
 import Input from './Input.vue'
 import { useAlertStore } from '@/stores/alert'
+import type { ProjectProp } from '@/types'
 const emit = defineEmits(['closeModal'])
-const inputInfo = ref({
+const inputInfo = ref<{ title: string; detail: string }>({
   title: '',
   detail: '',
 })
@@ -13,9 +14,11 @@ function handleSubmit() {
   if (!inputInfo.value.title) {
     console.log('请输入标题')
   } else {
-    const id = Date.now()
+    const id: number = Date.now()
     const { title, detail } = inputInfo.value
-    const storeProjects = JSON.parse(localStorage.getItem('projects') || '[]')
+    const storeProjects: ProjectProp[] = JSON.parse(
+      localStorage.getItem('projects') || '[]',
+    )
     localStorage.setItem(
       'projects',
       JSON.stringify([

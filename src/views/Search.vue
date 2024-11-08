@@ -7,6 +7,7 @@ import TaskItem from '@/components/TaskItem.vue'
 import { useAlertStore } from '@/stores/alert'
 import dayjs from 'dayjs'
 import { useReloadStore } from '@/stores/reload'
+import type { ListProp } from '@/types'
 
 defineProps({
   title: {
@@ -24,15 +25,17 @@ defineProps({
     required: true,
   },
 })
-const inputRef = useTemplateRef('input')
-const text = ref('')
-const lists = ref(JSON.parse(localStorage.getItem('allLists') || '[]'))
+const inputRef = useTemplateRef<HTMLInputElement>('input')
+const text = ref<string>('')
+const lists = ref<ListProp[]>(
+  JSON.parse(localStorage.getItem('allLists') || '[]'),
+)
 const alertStore = useAlertStore()
 const reloadStore = useReloadStore()
 
 function checkedItem(id: number) {
   const newLists = lists.value.slice()
-  const item = newLists.find(item => item.id === id)
+  const item = newLists.find(item => item.id === id) as ListProp
   item.checked = true
   item.finishedTime = dayjs().format('YYYY-MM-DD HH:mm:ss')
   item.clearTime = dayjs().add(30, 'days').format('YYYY-MM-DD HH:mm:ss')
@@ -47,11 +50,11 @@ function reload() {
 
 reloadStore.changeReload(reload)
 
-const filterLists = computed(() => {
+const filterLists = computed<ListProp[]>(() => {
   const list = toValue(lists)
   const deText = toValue(text)
   return list.filter(
-    item => deText && !item.checked && item.title.includes(deText),
+    item => deText && !item.checked && item.title!.includes(deText),
   )
 })
 
@@ -77,12 +80,12 @@ onMounted(() => inputRef.value?.focus())
           v-for="list in filterLists"
           @checkedItem="checkedItem"
           :key="list.id"
-          :id="list.id"
-          :title="list.title"
-          :desc="list.desc"
-          :date="list.date"
+          :id="list.id!"
+          :title="list.title!"
+          :desc="list.desc!"
+          :date="list.date!"
           :premier="list.premier"
-          :type="list.type"
+          :type="list.type!"
         />
         <div v-if="!filterLists.length" class="mt-8">
           <div class="flex justify-center">

@@ -3,12 +3,15 @@ import ListContainer from '@/components/ListContainer.vue'
 import TaskItem from '@/components/TaskItem.vue'
 import { useAlertStore } from '@/stores/alert'
 import { useReloadStore } from '@/stores/reload'
+import type { ListProp } from '@/types'
 import dayjs from 'dayjs'
 import { computed, ref } from 'vue'
 import { SiTicktick } from 'vue-icons-plus/si'
 
-const lists = ref(JSON.parse(localStorage.getItem('allLists') || '[]'))
-const today = dayjs().format('YYYY-MM-DD')
+const lists = ref<ListProp[]>(
+  JSON.parse(localStorage.getItem('allLists') || '[]'),
+)
+const today: string = dayjs().format('YYYY-MM-DD')
 const reloadStore = useReloadStore()
 const alertStore = useAlertStore()
 
@@ -18,7 +21,7 @@ function reload() {
 
 function checkedItem(id: number) {
   const newLists = lists.value.slice()
-  const item = newLists.find(item => item.id === id)
+  const item = newLists.find(item => item.id === id) as ListProp
   item.checked = true
   item.finishedTime = dayjs().format('YYYY-MM-DD HH:mm:ss')
   item.clearTime = dayjs().add(30, 'days').format('YYYY-MM-DD HH:mm:ss')
@@ -28,8 +31,8 @@ function checkedItem(id: number) {
 }
 
 function checkedAllItems() {
-  const newLists = lists.value.slice().map(list => {
-    if (list.date < today && !list.checked) {
+  const newLists: ListProp[] = lists.value.slice().map(list => {
+    if (list.date! < today && !list.checked) {
       return {
         ...list,
         finishedTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
@@ -47,7 +50,7 @@ function checkedAllItems() {
 
 reloadStore.changeReload(reload)
 
-const sortLists = computed(() => {
+const sortLists = computed<ListProp[]>(() => {
   const premierNum = {
     first: 1,
     second: 2,
@@ -56,8 +59,8 @@ const sortLists = computed(() => {
   }
   return lists.value
     .slice()
-    .filter(item => !item.checked && item.date < today)
-    .sort((a, b) => premierNum[a.premier] - premierNum[b.premier])
+    .filter(item => !item.checked && item.date! < today)
+    .sort((a, b) => premierNum[a.premier!] - premierNum[b.premier!])
 })
 </script>
 

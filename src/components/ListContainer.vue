@@ -24,10 +24,14 @@ defineProps({
     required: true,
   },
 })
-const emit = defineEmits(['reload', 'defineClick'])
+// ['reload', 'defineClick']
+const emit = defineEmits<{
+  (e: 'reload'): void
+  (e: 'defineClick'): void
+}>()
 
 const maskStore = useMaskStore()
-const isModalShow = ref(false)
+const isModalShow = ref<boolean>(false)
 
 function openModal() {
   isModalShow.value = true

@@ -1,22 +1,23 @@
 <script setup lang="ts">
 import PopConfirm from '@/components/PopConfirm.vue'
 import { useAlertStore } from '@/stores/alert'
+import type { ListProp } from '@/types'
 import dayjs from 'dayjs'
 import { computed, ref } from 'vue'
 import { FcFullTrash } from 'vue-icons-plus/fc'
 import { PiTrashSimple } from 'vue-icons-plus/pi'
 import { RiArrowGoBackLine } from 'vue-icons-plus/ri'
 
-const today = dayjs().format('YYYY-MM-DD HH:mm:ss')
-const filterList = JSON.parse(localStorage.getItem('allLists') || '[]').filter(
-  item => !item.clearTime || item.clearTime > today,
-)
+const today: string = dayjs().format('YYYY-MM-DD HH:mm:ss')
+const filterList: ListProp[] = JSON.parse(
+  localStorage.getItem('allLists') || '[]',
+).filter((item: ListProp) => !item.clearTime || item.clearTime > today)
 const allList = ref(filterList)
 const alertStore = useAlertStore()
 
 function withdraw(id: number) {
   const newList = allList.value.slice()
-  const item = newList.find(item => item.id === id)
+  const item = newList.find(item => item.id === id) as ListProp
   item.checked = false
   item.finishedTime = null
   localStorage.setItem('allLists', JSON.stringify(newList))
@@ -25,20 +26,26 @@ function withdraw(id: number) {
 }
 
 function deleteItem(id: number) {
-  const newList = allList.value.slice().filter(item => item.id !== id)
+  const newList: ListProp[] = allList.value
+    .slice()
+    .filter(item => item.id !== id)
   localStorage.setItem('allLists', JSON.stringify(newList))
   allList.value = newList
   alertStore.openAlert('任务已永久删除', id, true)
 }
 
 function clearTrash() {
-  const newList = allList.value.slice().filter(item => !item.checked)
+  const newList: ListProp[] = allList.value
+    .slice()
+    .filter(item => !item.checked)
   localStorage.setItem('allLists', JSON.stringify(newList))
   allList.value = newList
   alertStore.openAlert('回收站已清空', null, true)
 }
 
-const checkedList = computed(() => allList.value.filter(item => item.checked))
+const checkedList = computed<ListProp[]>(() =>
+  allList.value.filter(item => item.checked),
+)
 </script>
 <!-- @click.capture="isTrashModalOpen = false" -->
 
@@ -76,10 +83,10 @@ const checkedList = computed(() => allList.value.filter(item => item.checked))
           <td>{{ item.finishedTime }}</td>
           <td>{{ item.clearTime }}</td>
           <td class="flex items-center gap-4 options">
-            <button @click="withdraw(item.id)">
+            <button @click="withdraw(item.id!)">
               <RiArrowGoBackLine />
             </button>
-            <button @click="deleteItem(item.id)">
+            <button @click="deleteItem(item.id!)">
               <PiTrashSimple />
             </button>
           </td>

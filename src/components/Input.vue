@@ -10,17 +10,13 @@ const { label, name } = defineProps({
     type: String,
     required: true,
   },
-  value: {
-    type: String,
-    required: true,
-  },
 })
 
-const inputRef = ref()
+const inputRef = ref<HTMLInputElement>()
 const model = defineModel()
 
 function clickInput() {
-  inputRef.value.focus()
+  inputRef.value!.focus()
 }
 </script>
 

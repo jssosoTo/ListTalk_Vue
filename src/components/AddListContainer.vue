@@ -17,14 +17,23 @@ import { computed, ref, toValue } from 'vue'
 import { SiAboutdotme } from 'vue-icons-plus/si'
 import dayjs from 'dayjs'
 import { useReloadStore } from '@/stores/reload'
+import type { ListProp, ProjectProp } from '@/types'
+
+type ItemNumProp = {
+  [key: string]: number | ItemNumProp
+}
 
 const route = useRoute()
-const thisDate = ref(dayjs().format('YYYY-MM-DD'))
-const projects = ref(JSON.parse(localStorage.getItem('projects') || '[]'))
-const lists = ref(JSON.parse(localStorage.getItem('allLists') || '[]'))
+const thisDate = ref<string>(dayjs().format('YYYY-MM-DD'))
+const projects = ref<ProjectProp[]>(
+  JSON.parse(localStorage.getItem('projects') || '[]'),
+)
+const lists = ref<ListProp[]>(
+  JSON.parse(localStorage.getItem('allLists') || '[]'),
+)
+const isModalShow = ref<boolean>(false)
 const maskStore = useMaskStore()
 const reloadStore = useReloadStore()
-const isModalShow = ref(false)
 
 function openModal() {
   isModalShow.value = true
@@ -43,17 +52,19 @@ function reload() {
 
 reloadStore.changePermanentReload(reload)
 
-const itemsNum = computed(() => {
-  const list = toValue(lists)
-  const project = toValue(projects)
-  const unChecked = list.filter(item => !item.checked)
-  const recycle = list.filter(item => item.checked).length
-  const today = unChecked.length
-  const outdate = unChecked.filter(item => item.date < thisDate.value).length
-  const projectsNum = Object.fromEntries(
-    project.map(item => [
+const itemsNum = computed<ItemNumProp>(() => {
+  const list: ListProp[] = toValue(lists)
+  const project: ProjectProp[] = toValue(projects)
+  const unChecked: ListProp[] = list.filter(item => !item.checked)
+  const recycle: number = list.filter(item => item.checked).length
+  const today: number = unChecked.length
+  const outdate: number = unChecked.filter(
+    item => item.date < thisDate.value,
+  ).length
+  const projectsNum: ItemNumProp = Object.fromEntries(
+    project.map((item: ProjectProp) => [
       item.id,
-      unChecked.reduce((acc, cur) => {
+      unChecked.reduce((acc: number, cur: ListProp) => {
         if (cur.type.value === item.id) {
           acc += 1
         }

@@ -8,6 +8,7 @@ import ProjectModal from './ProjectModal.vue'
 import GlobalModal from './GlobalModal.vue'
 import { Fa6Hashtag } from 'vue-icons-plus/fa6'
 import ListItem from './ListItem.vue'
+import type { ProjectProp } from '@/types'
 
 defineProps({
   itemsNum: {
@@ -18,8 +19,10 @@ defineProps({
 
 const route = useRoute()
 const mask = useMaskStore()
-const projects = ref(JSON.parse(localStorage.getItem('projects') || '[]'))
-const isModalShow = ref(false)
+const projects = ref<ProjectProp[]>(
+  JSON.parse(localStorage.getItem('projects') || '[]'),
+)
+const isModalShow = ref<boolean>(false)
 
 function openModal() {
   isModalShow.value = true

@@ -1,15 +1,18 @@
 <script setup lang="ts">
 import CalendarItem from '@/components/CalendarItem.vue'
 import { useReloadStore } from '@/stores/reload'
-import dayjs from 'dayjs'
+import type { ListProp } from '@/types'
+import dayjs, { Dayjs } from 'dayjs'
 import { computed, ref } from 'vue'
 import { EpArrowLeftBold, EpArrowRightBold } from 'vue-icons-plus/ep'
 
-const days = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
-const today = ref(dayjs())
-const thisDay = ref(dayjs().format('YYYY-MM-DD'))
+const days: string[] = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
+const today = ref<Dayjs>(dayjs())
+const thisDay = ref<string>(dayjs().format('YYYY-MM-DD'))
 const reloadStore = useReloadStore()
-const allList = ref(JSON.parse(localStorage.getItem('allLists') || '[]'))
+const allList = ref<ListProp[]>(
+  JSON.parse(localStorage.getItem('allLists') || '[]'),
+)
 
 function reload() {
   allList.value = JSON.parse(localStorage.getItem('allLists') || '[]')
@@ -24,7 +27,7 @@ function minusHandler() {
   today.value = today.value.subtract(1, 'M')
 }
 
-const dateTitle = computed(() => today.value.format('YYYY年MM月'))
+const dateTitle = computed<string>(() => today.value.format('YYYY年MM月'))
 const dateArrs = computed(() => {
   const lastDates = []
   const thisDates = []

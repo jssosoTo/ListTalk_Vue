@@ -8,13 +8,16 @@ import SelectItem from './SelectItem.vue'
 import { useReloadStore } from '@/stores/reload'
 import { useMaskStore } from '@/stores/mask'
 import { useAlertStore } from '@/stores/alert'
+import type { ListProp, ModalProp, ProjectProp } from '@/types'
 
-const emit = defineEmits(['closeModal'])
+const emit = defineEmits<{ (e: 'closeModal'): void }>()
 const initialValues = useMaskStore().initialValues
 const alertStore = useAlertStore()
 
-const projects = ref(JSON.parse(localStorage.getItem('projects') || '[]'))
-const modalInfo = ref({
+const projects = ref<ProjectProp[]>(
+  JSON.parse(localStorage.getItem('projects') || '[]'),
+)
+const modalInfo = ref<ModalProp>({
   title: '',
   desc: '',
   date: dayjs().format('YYYY-MM-DD'),
@@ -26,10 +29,10 @@ const modalInfo = ref({
   btnModalText: '',
   ...initialValues,
 })
+const isPjtBtnModalOpen = ref<boolean>(false)
 const reloadStore = useReloadStore()
 const reload = reloadStore.reload
 const permanentReload = reloadStore.permanentReload
-const isPjtBtnModalOpen = ref(false)
 
 function autoSize(e: Event) {
   const textarea: HTMLTextAreaElement = e.target as HTMLTextAreaElement
@@ -41,7 +44,7 @@ function closeBtnModal() {
   isPjtBtnModalOpen.value = false
 }
 
-function selectPjt(value: string, title: string) {
+function selectPjt(value: number, title: string) {
   modalInfo.value.associatePjt.value = value
   modalInfo.value.associatePjt.title = title
   closeBtnModal()
@@ -50,7 +53,9 @@ function selectPjt(value: string, title: string) {
 function submit() {
   if (!modalInfo.value.title) return false
   const { btnModalText: _, associatePjt: type, ...params } = modalInfo.value
-  let storeList = JSON.parse(localStorage.getItem('allLists') || '[]')
+  let storeList: ListProp[] = JSON.parse(
+    localStorage.getItem('allLists') || '[]',
+  )
   if (!modalInfo.value.id) {
     storeList.push({
       id: Date.now(),
@@ -76,7 +81,7 @@ function submit() {
   reload()
 }
 
-const filterProjects = computed(() => {
+const filterProjects = computed<ProjectProp[]>(() => {
   if (!modalInfo.value.btnModalText) return projects.value
   return projects.value.filter(({ title }: { title: string }) =>
     title.includes(modalInfo.value.btnModalText),
