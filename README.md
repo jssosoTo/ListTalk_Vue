@@ -17,7 +17,7 @@ Project Version: 1.0.1
 - 2024/11/09
 
 1. Add some new futures in the Calendar page.
-2. Fix bug where the numbers in the sidebar do not update when you check all tasks of the outdated task page.
+2. Fix bug where the numbers in the sidebar do not update when you check all tasks of the outdated task page.[x]
 3. Make the light theme's UI more user-friendly
 4. Add translate button
 5. Fix bug(If the length of list's description is over 1 line will destroy CSS. And edit it, the mask's input for description display only 1 line)

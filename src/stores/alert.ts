@@ -37,6 +37,7 @@ export const useAlertStore = defineStore('alert', () => {
       isConfirm.value = false
     }
     timeoutId.value = setTimeout(closeAlert.bind(null, id), id ? 5000 : 3000)
+    reloadStore.permanentReload()
   }
 
   function withdrawOperation() {

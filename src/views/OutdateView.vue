@@ -81,12 +81,12 @@ const sortLists = computed<ListProp[]>(() => {
       v-for="list in sortLists"
       @checkedItem="checkedItem"
       :key="list.id"
-      :id="list.id"
-      :title="list.title"
-      :desc="list.desc"
-      :date="list.date"
+      :id="list.id!"
+      :title="list.title!"
+      :desc="list.desc!"
+      :date="list.date!"
       :premier="list.premier"
-      :type="list.type"
+      :type="list.type!"
     />
   </ListContainer>
 </template>

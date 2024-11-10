@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import dayjs from 'dayjs'
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref, useTemplateRef } from 'vue'
 import { BiSolidDownArrow } from 'vue-icons-plus/bi'
 import ContentModal from './ContentModal.vue'
 import ButtonModal from './ButtonModal.vue'
@@ -17,6 +17,7 @@ const alertStore = useAlertStore()
 const projects = ref<ProjectProp[]>(
   JSON.parse(localStorage.getItem('projects') || '[]'),
 )
+const textarea = useTemplateRef<HTMLTextAreaElement>('text')
 const modalInfo = ref<ModalProp>({
   title: '',
   desc: '',
@@ -87,6 +88,10 @@ const filterProjects = computed<ProjectProp[]>(() => {
     title.includes(modalInfo.value.btnModalText),
   )
 })
+
+onMounted(() => {
+  autoSize({ target: textarea.value } as Event)
+})
 </script>
 
 <template>
@@ -99,6 +104,8 @@ const filterProjects = computed<ProjectProp[]>(() => {
         <textarea
           v-model="modalInfo.desc"
           @input="autoSize"
+          style="max-height: 200px"
+          ref="text"
           rows="1"
           placeholder="描述"
         ></textarea>
