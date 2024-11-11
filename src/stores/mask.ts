@@ -4,6 +4,11 @@ import { ref } from 'vue'
 export const useMaskStore = defineStore('mask', () => {
   const isMaskShow = ref(false)
   const initialValues = ref(null)
+  const particularStyles = ref({})
+
+  function setStyles(styles: StyleSheet) {
+    particularStyles.value = styles
+  }
 
   function toggleMaskShow() {
     isMaskShow.value = !isMaskShow.value
@@ -11,12 +16,12 @@ export const useMaskStore = defineStore('mask', () => {
 
   function openMask(injectInitialValues?: object) {
     isMaskShow.value = true
-    console.log(injectInitialValues)
     initialValues.value = injectInitialValues || null
   }
 
   function closeMask() {
     isMaskShow.value = false
+    particularStyles.value = {}
     initialValues.value = null
   }
 
@@ -26,5 +31,7 @@ export const useMaskStore = defineStore('mask', () => {
     toggleMaskShow,
     openMask,
     closeMask,
+    setStyles,
+    particularStyles,
   }
 })
