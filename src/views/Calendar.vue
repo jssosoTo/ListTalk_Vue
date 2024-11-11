@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import CalendarItem from '@/components/CalendarItem.vue'
+import Modal from '@/components/Modal.vue'
+import Mask from '@/Mask.vue'
+import { useMaskStore } from '@/stores/mask'
 import { useReloadStore } from '@/stores/reload'
 import type { ListProp } from '@/types'
 import dayjs, { Dayjs } from 'dayjs'
@@ -9,10 +12,22 @@ import { EpArrowLeftBold, EpArrowRightBold } from 'vue-icons-plus/ep'
 const days: string[] = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
 const today = ref<Dayjs>(dayjs())
 const thisDay = ref<string>(dayjs().format('YYYY-MM-DD'))
+const isModalShow = ref<boolean>(false)
 const reloadStore = useReloadStore()
+const maskStore = useMaskStore()
 const allList = ref<ListProp[]>(
   JSON.parse(localStorage.getItem('allLists') || '[]'),
 )
+
+function openModal(date: string) {
+  isModalShow.value = true
+  maskStore.openMask({ date })
+}
+
+function closeModal() {
+  isModalShow.value = false
+  maskStore.closeMask()
+}
 
 function reload() {
   allList.value = JSON.parse(localStorage.getItem('allLists') || '[]')
@@ -88,6 +103,7 @@ const dateArrs = computed(() => {
         v-for="({ date, arr, text }, i) in dateArrs"
         :key="date"
         class="flex flex-col border border-solid"
+        @click.stop="openModal(date)"
       >
         <h6 class="text-center text-xs mt-1" v-if="i < 7">
           {{ days[dayjs(date).day()] }}
@@ -106,16 +122,20 @@ const dateArrs = computed(() => {
           <CalendarItem
             v-for="list in arr"
             :key="list.id"
-            :id="list.id"
-            :title="list.title"
-            :desc="list.desc"
+            :id="list.id!"
+            :title="list.title!"
+            :desc="list.desc!"
             :date="list.date"
             :premier="list.premier"
-            :type="list.type"
+            :type="list.type!"
           />
         </TransitionGroup>
       </div>
     </main>
+
+    <Mask v-if="isModalShow" @closeModal="closeModal">
+      <Modal v-if="isModalShow" @closeModal="closeModal"></Modal>
+    </Mask>
   </div>
 </template>
 

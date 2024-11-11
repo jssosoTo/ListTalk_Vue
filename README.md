@@ -10,13 +10,13 @@ npm install --legacy-peer-deps
 
 ## About Project
 
-Project Version: 1.0.4
+Project Version: 1.1.0
 
 ## What will be updated next time?
 
 - 2024/11/09
 
-1. Add some new futures in the Calendar page.
+1. Add some new futures in the Calendar page.[x]
 2. Fix bug where the numbers in the sidebar do not update when you check all tasks of the outdated task page.[x]
 3. Make the light theme's UI more user-friendly[x]
 4. Add translate button
