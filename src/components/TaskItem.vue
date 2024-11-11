@@ -98,7 +98,7 @@ const premierText = computed(() => {
       </h4>
     </div>
     <div @click="openModal" class="content cursor-pointer">
-      <p class="overflow-hidden whitespace-nowrap text-ellipsis">
+      <p class="textOVerThree">
         {{ desc }}
       </p>
       <div class="w-full flex items-center tags gap-3">
