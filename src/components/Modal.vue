@@ -47,9 +47,9 @@ function autoSize(e: Event) {
 function getMaxPosition(position: number, isY?: boolean) {
   const modal = modalRef.value!.getBoundingClientRect()
   if (isY) {
-    return Math.min(position, window.innerHeight - modal.height)
+    return Math.max(0, Math.min(position, window.innerHeight - modal.height))
   }
-  return Math.min(position, window.innerWidth - modal.width)
+  return Math.max(0, Math.min(position, window.innerWidth - modal.width))
 }
 
 function move(e: MouseEvent) {
