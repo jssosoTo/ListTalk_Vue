@@ -251,6 +251,7 @@ select option {
   cursor: pointer;
   padding: 0.4rem 0.6rem;
   border-radius: 5px;
+  transition: all 0.6s;
 }
 
 .btn:hover {

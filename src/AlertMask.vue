@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { isBottom } = defineProps<{ isBottom: boolean }>()
+const { isBottom } = defineProps<{ isBottom?: boolean }>()
 </script>
 
 <template>

@@ -37,7 +37,7 @@ defineProps({
 
 <style scoped>
 a:hover {
-  background-color: var(--btn-color);
+  background-color: var(--shade-text);
   border-radius: 5px;
 }
 

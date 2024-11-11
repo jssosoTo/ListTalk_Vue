@@ -59,13 +59,13 @@ const itemsNum = computed<ItemNumProp>(() => {
   const recycle: number = list.filter(item => item.checked).length
   const today: number = unChecked.length
   const outdate: number = unChecked.filter(
-    item => item.date < thisDate.value,
+    item => item.date! < thisDate.value,
   ).length
   const projectsNum: ItemNumProp = Object.fromEntries(
     project.map((item: ProjectProp) => [
       item.id,
       unChecked.reduce((acc: number, cur: ListProp) => {
-        if (cur.type.value === item.id) {
+        if (cur.type!.value === item.id) {
           acc += 1
         }
         return acc
