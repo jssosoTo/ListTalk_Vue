@@ -3,8 +3,9 @@ import ListContainer from '@/components/ListContainer.vue'
 import TaskItem from '@/components/TaskItem.vue'
 import { useAlertStore } from '@/stores/alert'
 import { useReloadStore } from '@/stores/reload'
-import type { ListProp, PremierTypes } from '@/types'
+import type { ListProp, PremierTypes, TranslateTextType } from '@/types'
 import dayjs from 'dayjs'
+import { inject } from 'vue'
 import { computed, ref } from 'vue'
 
 const lists = ref<ListProp[]>(
@@ -12,6 +13,10 @@ const lists = ref<ListProp[]>(
 )
 const reloadStore = useReloadStore()
 const alertStore = useAlertStore()
+const translateText = inject<TranslateTextType>(
+  'translateText',
+  (title: string) => title,
+)
 
 function reload() {
   lists.value = JSON.parse(localStorage.getItem('allLists') || '[]')
@@ -25,7 +30,7 @@ function checkedItem(id: number) {
   item.clearTime = dayjs().add(30, 'days').format('YYYY-MM-DD HH:mm:ss')
   localStorage.setItem('allLists', JSON.stringify(newLists))
   lists.value = newLists
-  alertStore.openAlert('1个任务已完成', id)
+  alertStore.openAlert(translateText('finishedTask'), id)
 }
 
 reloadStore.changeReload(reload)
@@ -50,7 +55,7 @@ const sortLists = computed<ListProp[]>(() => {
 
 <template>
   <ListContainer
-    title="今天"
+    :title="translateText('today')"
     :task-num="sortLists.length"
     @reload="reload"
     :is-task-num-show="true"

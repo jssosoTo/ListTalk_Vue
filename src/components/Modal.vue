@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import dayjs from 'dayjs'
-import { computed, onMounted, ref, useTemplateRef } from 'vue'
+import { computed, inject, onMounted, ref, useTemplateRef } from 'vue'
 import { BiSolidDownArrow } from 'vue-icons-plus/bi'
 import ContentModal from './ContentModal.vue'
 import ButtonModal from './ButtonModal.vue'
@@ -8,7 +8,12 @@ import SelectItem from './SelectItem.vue'
 import { useReloadStore } from '@/stores/reload'
 import { useMaskStore } from '@/stores/mask'
 import { useAlertStore } from '@/stores/alert'
-import type { ListProp, ModalProp, ProjectProp } from '@/types'
+import type {
+  ListProp,
+  ModalProp,
+  ProjectProp,
+  TranslateTextType,
+} from '@/types'
 import { BsArrowsMove } from 'vue-icons-plus/bs'
 
 const emit = defineEmits<{ (e: 'closeModal'): void }>()
@@ -38,6 +43,10 @@ const modalRef = useTemplateRef<HTMLDivElement>('modal')
 const reloadStore = useReloadStore()
 const reload = reloadStore.reload
 const permanentReload = reloadStore.permanentReload
+const translateText = inject<TranslateTextType>(
+  'translateText',
+  (title: string) => title,
+)
 
 function autoSize(e: Event) {
   const textarea: HTMLTextAreaElement = e.target as HTMLTextAreaElement
@@ -103,7 +112,11 @@ function submit() {
     })
   }
   localStorage.setItem('allLists', JSON.stringify(storeList))
-  alertStore.openAlert(modalInfo.value.id ? '任务编辑成功' : '任务新增成功')
+  alertStore.openAlert(
+    modalInfo.value.id
+      ? translateText('editSuccess')
+      : translateText('addSuccess'),
+  )
   emit('closeModal')
   permanentReload()
   reload()
@@ -150,7 +163,10 @@ onMounted(() => {
     <form @click.stop="closeBtnModal" @submit.prevent="submit" class="modal">
       <main>
         <div class="headerTitle">
-          <input v-model="modalInfo.title" placeholder="请输入标题" />
+          <input
+            v-model="modalInfo.title"
+            :placeholder="translateText('placeholderTitle')"
+          />
         </div>
         <div class="intro">
           <textarea
@@ -159,16 +175,16 @@ onMounted(() => {
             style="max-height: 200px"
             ref="text"
             rows="1"
-            placeholder="描述"
+            :placeholder="translateText('placeholderDesc')"
           ></textarea>
         </div>
         <div class="flex items-stretch gap-2 mt-2">
           <input v-model="modalInfo.date" type="date" />
           <select v-model="modalInfo.premier">
-            <option value="first">优先级1</option>
-            <option value="second">优先级2</option>
-            <option value="third">优先级3</option>
-            <option value="forth">优先级4</option>
+            <option value="first">{{ translateText('premier') }}1</option>
+            <option value="second">{{ translateText('premier') }}2</option>
+            <option value="third">{{ translateText('premier') }}3</option>
+            <option value="forth">{{ translateText('premier') }}4</option>
           </select>
         </div>
       </main>
@@ -180,7 +196,10 @@ onMounted(() => {
               class="btn flex items-center gap-2"
               @click.stop="isPjtBtnModalOpen = true"
             >
-              <span>{{ modalInfo.associatePjt.title || '选择关联项目' }}</span>
+              <span>{{
+                modalInfo.associatePjt.title ||
+                translateText('placeholderAssociatedProject')
+              }}</span>
               <BiSolidDownArrow style="width: 0.65rem" />
             </div>
           </template>
@@ -189,7 +208,7 @@ onMounted(() => {
               <div class="p-2 w-60">
                 <input
                   type="text"
-                  placeholder="请输入项目名称"
+                  :placeholder="translateText('placeholderProjectName')"
                   v-model="modalInfo.btnModalText"
                   style="outline: none; border-color: var(--shade-border-color)"
                   class="rounded w-full p-1 text-sm bg-transparent border border-solid"
@@ -197,7 +216,7 @@ onMounted(() => {
               </div>
               <hr />
               <div>
-                <h2 class="pl-2">我的项目</h2>
+                <h2 class="pl-2">{{ translateText('myProjects') }}</h2>
                 <div class="h-48 overflow-y-auto">
                   <SelectItem
                     v-for="{ id, title } in filterProjects"
@@ -214,8 +233,12 @@ onMounted(() => {
         </ContentModal>
 
         <div class="flex items-center gap-4">
-          <button class="cancel_btn" @click="emit('closeModal')">取消</button>
-          <button type="submit" class="submit_btn">保存</button>
+          <button class="cancel_btn" @click="emit('closeModal')">
+            {{ translateText('cancel') }}
+          </button>
+          <button type="submit" class="submit_btn">
+            {{ translateText('save') }}
+          </button>
         </div>
       </footer>
     </form>

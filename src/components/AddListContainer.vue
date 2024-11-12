@@ -13,17 +13,21 @@ import { useMaskStore } from '@/stores/mask'
 import Mask from '@/Mask.vue'
 import Modal from './Modal.vue'
 import Project from './Project.vue'
-import { computed, ref, toValue } from 'vue'
+import { computed, inject, ref, toValue } from 'vue'
 import { SiAboutdotme } from 'vue-icons-plus/si'
 import dayjs from 'dayjs'
 import { useReloadStore } from '@/stores/reload'
-import type { ListProp, ProjectProp } from '@/types'
+import type { ListProp, ProjectProp, TranslateTextType } from '@/types'
 
 type ItemNumProp = {
   [key: string]: number | ItemNumProp
 }
 
 const route = useRoute()
+const translateText = inject<TranslateTextType>(
+  'translateText',
+  (title: string) => title,
+)
 const thisDate = ref<string>(dayjs().format('YYYY-MM-DD'))
 const projects = ref<ProjectProp[]>(
   JSON.parse(localStorage.getItem('projects') || '[]'),
@@ -86,17 +90,17 @@ const itemsNum = computed<ItemNumProp>(() => {
   <main class="flex-1 overflow-hidden mt-3 flex flex-col gap-1">
     <div class="flex justify-center gap-2 btn mx-3" @click="openModal">
       <MdAddCircle style="color: #dc4c3e" />
-      <span>添加任务</span>
+      <span>{{ translateText('addTask') }}</span>
     </div>
     <div v-if="false" class="flex items-center searchBtn mx-3">
       <BsSearchHeartFill style="width: 0.98rem" />
-      <input class="flex-1 search" placeholder="搜索" />
+      <input class="flex-1 search" :placeholder="translateText('search')" />
     </div>
     <ul class="flex flex-col gap-2 mx-3" style="margin-top: 0.5rem">
       <li :class="{ activePath: route.path === '/search' }">
         <ListItem
           path="/search"
-          title="搜索"
+          :title="translateText('search')"
           :Icon="BsSearchHeartFill"
           :is-hidden-num="true"
           :itemsNum="0"
@@ -105,7 +109,7 @@ const itemsNum = computed<ItemNumProp>(() => {
       <li :class="{ activePath: route.path === '/today' }">
         <ListItem
           path="/today"
-          title="今天"
+          :title="translateText('today')"
           :Icon="BsCalendar3"
           :itemsNum="itemsNum.today"
         />
@@ -113,7 +117,7 @@ const itemsNum = computed<ItemNumProp>(() => {
       <li :class="{ activePath: route.path === '/outdate' }">
         <ListItem
           path="/outdate"
-          title="超时任务"
+          :title="translateText('outdatedTasks')"
           :Icon="EpAlarmClock"
           :itemsNum="itemsNum.outdate"
         />
@@ -121,7 +125,7 @@ const itemsNum = computed<ItemNumProp>(() => {
       <li :class="{ activePath: route.path === '/recycle' }">
         <ListItem
           path="/recycle"
-          title="回收站"
+          :title="translateText('recycle')"
           :Icon="GiRecycle"
           :itemsNum="itemsNum.recycle"
         />
@@ -129,7 +133,7 @@ const itemsNum = computed<ItemNumProp>(() => {
       <li :class="{ activePath: route.path === '/calendar' }">
         <ListItem
           path="/calendar"
-          title="日历"
+          :title="translateText('calendar')"
           :Icon="BsCalendar2Date"
           :is-hidden-num="true"
           :itemsNum="0"
@@ -138,7 +142,7 @@ const itemsNum = computed<ItemNumProp>(() => {
       <li :class="{ activePath: route.path === '/about' }">
         <ListItem
           path="/about"
-          title="关于 - 应用以及作者"
+          :title="translateText('about')"
           :Icon="SiAboutdotme"
           :is-hidden-num="true"
           :itemsNum="0"

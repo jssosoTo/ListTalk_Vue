@@ -1,11 +1,21 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
 import { useThemeStore } from './stores/theme'
-import { ref } from 'vue'
+import { provide, ref } from 'vue'
 import HeaderItem from './components/HeaderItem.vue'
 import AddListContainer from './components/AddListContainer.vue'
 import Alert from './components/Alert.vue'
 import Confirm from './components/Confirm.vue'
+import en from './locales/en'
+import zhCN from './locales/zh-cn'
+import { useTranslateStore } from './stores/translate'
+
+const translateStore = useTranslateStore()
+const textObj = translateStore.language === 'zh-cn' ? zhCN : en
+
+function translateText(title: string) {
+  return textObj[title]
+}
 
 const theme = useThemeStore()
 const isNavShow = ref<boolean>(true)
@@ -13,6 +23,8 @@ const isNavShow = ref<boolean>(true)
 function toggleNav() {
   isNavShow.value = !isNavShow.value
 }
+
+provide('translateText', translateText)
 </script>
 
 <template>

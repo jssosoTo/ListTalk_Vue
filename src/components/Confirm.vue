@@ -1,9 +1,15 @@
 <script setup lang="ts">
 import AlertMask from '@/AlertMask.vue'
 import { useAlertStore } from '@/stores/alert'
+import type { TranslateTextType } from '@/types'
+import { inject } from 'vue'
 import { AiOutlineClose } from 'vue-icons-plus/ai'
 
 const alertStore = useAlertStore()
+const translateText = inject<TranslateTextType>(
+  'translateText',
+  (title: string) => title,
+)
 </script>
 
 <template>
@@ -21,7 +27,7 @@ const alertStore = useAlertStore()
         :class="{ hidden: alertStore.isHidden }"
         style="color: var(--main-g-color)"
         @click="alertStore.withdrawOperation"
-        >撤销</span
+        >{{ translateText('withdraw') }}</span
       >
       <AiOutlineClose
         @click="alertStore.closeAlert"

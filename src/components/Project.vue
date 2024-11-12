@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import Mask from '@/Mask.vue'
 import { useMaskStore } from '@/stores/mask'
-import { ref, watch } from 'vue'
+import { inject, ref, watch } from 'vue'
 import { AiOutlinePlus } from 'vue-icons-plus/ai'
 import { useRoute } from 'vue-router'
 import ProjectModal from './ProjectModal.vue'
 import GlobalModal from './GlobalModal.vue'
 import { Fa6Hashtag } from 'vue-icons-plus/fa6'
 import ListItem from './ListItem.vue'
-import type { ProjectProp } from '@/types'
+import type { ProjectProp, TranslateTextType } from '@/types'
 
 defineProps({
   itemsNum: {
@@ -23,6 +23,10 @@ const projects = ref<ProjectProp[]>(
   JSON.parse(localStorage.getItem('projects') || '[]'),
 )
 const isModalShow = ref<boolean>(false)
+const translateText = inject<TranslateTextType>(
+  'translateText',
+  (title: string) => title,
+)
 
 function openModal() {
   isModalShow.value = true
@@ -42,7 +46,7 @@ watch(isModalShow, () => {
 <template>
   <div class="mt-4 flex-1 overflow-hidden flex flex-col mb-4">
     <h2 class="flex items-center justify-between plusContainer mx-3">
-      <span># 我的项目</span>
+      <span># {{ translateText('myProjects') }}</span>
       <button class="cursor-pointer plus hidden" @click="openModal">
         <AiOutlinePlus />
       </button>

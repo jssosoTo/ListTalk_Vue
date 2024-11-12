@@ -4,12 +4,25 @@ import Modal from '@/components/Modal.vue'
 import Mask from '@/Mask.vue'
 import { useMaskStore } from '@/stores/mask'
 import { useReloadStore } from '@/stores/reload'
-import type { ListProp } from '@/types'
+import { useTranslateStore } from '@/stores/translate'
+import type { ListProp, TranslateTextType } from '@/types'
 import dayjs, { Dayjs } from 'dayjs'
-import { computed, ref } from 'vue'
+import { computed, inject, ref } from 'vue'
 import { EpArrowLeftBold, EpArrowRightBold } from 'vue-icons-plus/ep'
 
-const days: string[] = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
+const translateText = inject<TranslateTextType>(
+  'translateText',
+  (title: string) => title,
+)
+const days: string[] = [
+  translateText('sunday'),
+  translateText('monday'),
+  translateText('tuesday'),
+  translateText('wednesday'),
+  translateText('thursday'),
+  translateText('friday'),
+  translateText('saturday'),
+]
 const today = ref<Dayjs>(dayjs())
 const thisDay = ref<string>(dayjs().format('YYYY-MM-DD'))
 const isModalShow = ref<boolean>(false)
@@ -18,6 +31,7 @@ const maskStore = useMaskStore()
 const allList = ref<ListProp[]>(
   JSON.parse(localStorage.getItem('allLists') || '[]'),
 )
+const translateStore = useTranslateStore()
 
 function openModal(date: string) {
   isModalShow.value = true
@@ -34,6 +48,8 @@ function reload() {
 }
 reloadStore.changeReload(reload)
 
+const yearMonth = `YYYY${translateText('year')}MM${translateStore.language === 'zhCN' ? translateText('month') : ''}`
+
 async function addHandler() {
   today.value = today.value.add(1, 'M')
 }
@@ -42,7 +58,7 @@ function minusHandler() {
   today.value = today.value.subtract(1, 'M')
 }
 
-const dateTitle = computed<string>(() => today.value.format('YYYY年MM月'))
+const dateTitle = computed<string>(() => today.value.format(yearMonth))
 const dateArrs = computed(() => {
   const lastDates = []
   const thisDates = []
@@ -64,7 +80,7 @@ const dateArrs = computed(() => {
       date: date.format('YYYY-MM-DD'),
       text:
         lastMonthDate.format('YYYY-MM-DD') === date.format('YYYY-MM-DD')
-          ? date.format('MM月 DD日')
+          ? date.format(yearMonth)
           : date.format('DD'),
     })
   }
@@ -87,7 +103,9 @@ const dateArrs = computed(() => {
           <button class="arrow" @click="minusHandler">
             <EpArrowLeftBold />
           </button>
-          <button class="today_btn" @click="today = dayjs()">本月</button>
+          <button class="today_btn" @click="today = dayjs()">
+            {{ translateText('thisMonth') }}
+          </button>
           <button class="arrow" @click="addHandler">
             <EpArrowRightBold />
           </button>

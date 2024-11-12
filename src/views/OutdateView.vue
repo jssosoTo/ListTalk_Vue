@@ -3,9 +3,9 @@ import ListContainer from '@/components/ListContainer.vue'
 import TaskItem from '@/components/TaskItem.vue'
 import { useAlertStore } from '@/stores/alert'
 import { useReloadStore } from '@/stores/reload'
-import type { ListProp } from '@/types'
+import type { ListProp, TranslateTextType } from '@/types'
 import dayjs from 'dayjs'
-import { computed, ref } from 'vue'
+import { computed, inject, ref } from 'vue'
 import { SiTicktick } from 'vue-icons-plus/si'
 
 const lists = ref<ListProp[]>(
@@ -14,6 +14,10 @@ const lists = ref<ListProp[]>(
 const today: string = dayjs().format('YYYY-MM-DD')
 const reloadStore = useReloadStore()
 const alertStore = useAlertStore()
+const translateText = inject<TranslateTextType>(
+  'translateText',
+  (title: string) => title,
+)
 
 function reload() {
   lists.value = JSON.parse(localStorage.getItem('allLists') || '[]')
@@ -66,7 +70,7 @@ const sortLists = computed<ListProp[]>(() => {
 
 <template>
   <ListContainer
-    title="超时任务"
+    :title="translateText('outdatedTasks')"
     :task-num="sortLists.length"
     @reload="reload"
     :is-task-num-show="true"
@@ -75,7 +79,7 @@ const sortLists = computed<ListProp[]>(() => {
   >
     <template #button>
       <button><SiTicktick /></button>
-      <span>确认所有任务</span>
+      <span>{{ translateText('confirmAllTask') }}</span>
     </template>
     <TaskItem
       v-for="list in sortLists"

@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import PopConfirm from '@/components/PopConfirm.vue'
 import { useAlertStore } from '@/stores/alert'
-import type { ListProp } from '@/types'
+import type { ListProp, TranslateTextType } from '@/types'
 import dayjs from 'dayjs'
-import { computed, ref } from 'vue'
+import { computed, inject, ref } from 'vue'
 import { FcFullTrash } from 'vue-icons-plus/fc'
 import { PiTrashSimple } from 'vue-icons-plus/pi'
 import { RiArrowGoBackLine } from 'vue-icons-plus/ri'
@@ -14,6 +14,10 @@ const filterList: ListProp[] = JSON.parse(
 ).filter((item: ListProp) => !item.clearTime || item.clearTime > today)
 const allList = ref(filterList)
 const alertStore = useAlertStore()
+const translateText = inject<TranslateTextType>(
+  'translateText',
+  (title: string) => title,
+)
 
 function withdraw(id: number) {
   const newList = allList.value.slice()
@@ -51,17 +55,17 @@ const checkedList = computed<ListProp[]>(() =>
 
 <template>
   <div class="px-24 pt-8 pb-4 h-full flex flex-col overflow-y-auto">
-    <h1 class="text-xl">已确认的任务</h1>
+    <h1 class="text-xl">{{ translateText('confirmedTasks') }}</h1>
     <div class="title flex items-center justify-between mt-4">
-      <h2>系统会定期删除超过 30 天的这些任务</h2>
+      <h2>{{ translateText('recycleTitle') }}</h2>
       <div class="btns">
         <PopConfirm
-          title="此操作不可逆，确认清空回收站吗？"
+          :title="translateText('recyclePopConfirmTitle')"
           @on-confirm="clearTrash"
         >
           <button class="flex items-center gap-2 fnBtn">
             <FcFullTrash />
-            清空回收站
+            {{ translateText('clearRecycle') }}
           </button>
         </PopConfirm>
       </div>
@@ -69,11 +73,11 @@ const checkedList = computed<ListProp[]>(() =>
     <table class="w-full text-left relative">
       <thead class="sticky -top-8 header">
         <tr>
-          <th>日期</th>
-          <th>标题</th>
-          <th>完成日期</th>
-          <th>系统自动删除日期</th>
-          <th>操作</th>
+          <th>{{ translateText('date') }}</th>
+          <th>{{ translateText('title') }}</th>
+          <th>{{ translateText('finishedDate') }}</th>
+          <th>{{ translateText('autoDelete') }}</th>
+          <th>{{ translateText('operation') }}</th>
         </tr>
       </thead>
       <TransitionGroup tag="tbody">

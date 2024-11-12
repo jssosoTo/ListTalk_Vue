@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import Mask from '@/Mask.vue'
 import dayjs from 'dayjs'
-import { computed, ref } from 'vue'
+import { computed, inject, ref } from 'vue'
 import { BiCheckCircle, BiCircle } from 'vue-icons-plus/bi'
 import { BsFillFlagFill } from 'vue-icons-plus/bs'
 import { CgCalendarDates } from 'vue-icons-plus/cg'
 import Modal from './Modal.vue'
 import { useMaskStore } from '@/stores/mask'
 import { useReloadStore } from '@/stores/reload'
-import type { PremierTypes } from '@/types'
+import type { PremierTypes, TranslateTextType } from '@/types'
 
 const { id, title, desc, date, premier, type } = defineProps({
   id: {
@@ -52,6 +52,10 @@ function openModal() {
     associatePjt: { ...type },
   })
 }
+const translateText = inject<TranslateTextType>(
+  'translateText',
+  (title: string) => title,
+)
 
 function closeModal() {
   isModalShow.value = false
@@ -59,16 +63,20 @@ function closeModal() {
 }
 
 const dateText = computed<string>(() => {
-  const today = dayjs().format('YYYY年MM月DD日')
-  const taskDate = dayjs(date).format('YYYY年MM月DD日')
-  return today === taskDate ? '今天' : taskDate.slice(5)
+  const today = dayjs().format(
+    `YYYY${translateText('year')}MM${translateText('month')}DD${translateText('day')}`,
+  )
+  const taskDate = dayjs(date).format(
+    `YYYY${translateText('year')}MM${translateText('month')}DD${translateText('day')}`,
+  )
+  return today === taskDate ? translateText('today') : taskDate.slice(5)
 })
 const premierText = computed(() => {
   const premierTextObj = {
-    first: '优先级1',
-    second: '优先级2',
-    third: '优先级3',
-    forth: '优先级4',
+    first: `${translateText('premier')}1`,
+    second: `${translateText('premier')}2`,
+    third: `${translateText('premier')}3`,
+    forth: `${translateText('premier')}4`,
   }
 
   return premierTextObj[premier as PremierTypes]
@@ -104,7 +112,11 @@ const premierText = computed(() => {
       <div class="w-full flex items-center tags gap-3">
         <div
           class="flex items-center gap-1"
-          :title="dayjs(date).format('YYYY年MM月DD日')"
+          :title="
+            dayjs(date).format(
+              `YYYY${translateText('year')}MM${translateText('month')}DD${translateText('day')}`,
+            )
+          "
         >
           <CgCalendarDates /><span>
             {{ dateText }}

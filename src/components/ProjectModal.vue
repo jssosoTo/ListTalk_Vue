@@ -1,14 +1,18 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { inject, ref } from 'vue'
 import Input from './Input.vue'
 import { useAlertStore } from '@/stores/alert'
-import type { ProjectProp } from '@/types'
+import type { ProjectProp, TranslateTextType } from '@/types'
 const emit = defineEmits(['closeModal'])
 const inputInfo = ref<{ title: string; detail: string }>({
   title: '',
   detail: '',
 })
 const alertStore = useAlertStore()
+const translateText = inject<TranslateTextType>(
+  'translateText',
+  (title: string) => title,
+)
 
 function handleSubmit() {
   if (!inputInfo.value.title) {
@@ -31,7 +35,7 @@ function handleSubmit() {
         },
       ]),
     )
-    alertStore.openAlert('项目新增成功')
+    alertStore.openAlert(translateText('addSuccess'))
     emit('closeModal')
   }
 }
@@ -39,14 +43,26 @@ function handleSubmit() {
 
 <template>
   <div>
-    <h1 class="px-4 text-lg">新建项目</h1>
+    <h1 class="px-4 text-lg">{{ translateText('createProject') }}</h1>
     <div class="hr"></div>
     <form @submit.prevent="handleSubmit" class="px-4 flex flex-col gap-4">
-      <Input v-model="inputInfo.title" label="标题" name="title" />
-      <Input v-model="inputInfo.detail" label="简介" name="detail" />
+      <Input
+        v-model="inputInfo.title"
+        :label="translateText('title')"
+        name="title"
+      />
+      <Input
+        v-model="inputInfo.detail"
+        :label="translateText('desc')"
+        name="detail"
+      />
       <div class="flex items-center gap-2 justify-end">
-        <button class="cancel_btn" @click="emit('closeModal')">取消</button>
-        <button type="submit" class="submit_btn">保存</button>
+        <button class="cancel_btn" @click="emit('closeModal')">
+          {{ translateText('cancel') }}
+        </button>
+        <button type="submit" class="submit_btn">
+          {{ translateText('save') }}
+        </button>
       </div>
     </form>
   </div>

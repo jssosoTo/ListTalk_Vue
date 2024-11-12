@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import type { TranslateTextType } from '@/types'
+import { inject, onMounted, ref } from 'vue'
 import { BsGithub } from 'vue-icons-plus/bs'
 import { ImMail4 } from 'vue-icons-plus/im'
 
@@ -10,6 +11,10 @@ const author = ref<{
   followers: number
   html_url: string
 } | null>(null)
+const translateText = inject<TranslateTextType>(
+  'translateText',
+  (title: string) => title,
+)
 
 onMounted(async () => {
   const res = await fetch(`https://api.github.com/users/jssosoTo`)
@@ -88,13 +93,16 @@ onMounted(async () => {
             2. How to use
           </h2>
           <p class="text-xl paragraph">
-            Click '添加任务' button for add a task. And then, it will shows a
-            modal with form, enter content to add a Task.<br />
+            Click '{{ translateText('addTask') }}' button for add a task. And
+            then, it will shows a modal with form, enter content to add a
+            Task.<br />
           </p>
           <p class="text-xl paragraph">
-            If you have tasks, you can see it in the '今天' page. This page
-            contains any type of task. But if you check the task in any page, it
-            will be in the '回收站' page. In the '回收站' page contains all
+            If you have tasks, you can see it in the '{{
+              translateText('today')
+            }}' page. This page contains any type of task. But if you check the
+            task in any page, it will be in the '{{ translateText('recycle') }}'
+            page. In the '{{ translateText('recycle') }}' page contains all
             checked tasks, and you have the chance to withdraw it or permanently
             delete it.
           </p>

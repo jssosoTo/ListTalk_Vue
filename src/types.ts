@@ -4,6 +4,8 @@ type ProjectItemProp = {
   value: number | ''
 }
 
+export type TranslateTextType = { (title: string): string }
+
 export interface ListProp {
   checked?: boolean
   clearTime?: string

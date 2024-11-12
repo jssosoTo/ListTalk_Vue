@@ -5,6 +5,8 @@ import { CiLight } from 'vue-icons-plus/ci'
 import { MdDarkMode } from 'vue-icons-plus/md'
 import { RouterLink } from 'vue-router'
 import { useThemeStore } from '@/stores/theme'
+import { AiOutlineTranslation } from 'vue-icons-plus/ai'
+import { useTranslateStore } from '@/stores/translate'
 
 const { isNavShow, toggleNav } = defineProps({
   isNavShow: {
@@ -17,6 +19,7 @@ const { isNavShow, toggleNav } = defineProps({
   },
 })
 
+const translateStore = useTranslateStore()
 const theme = useThemeStore()
 </script>
 
@@ -27,6 +30,9 @@ const theme = useThemeStore()
       <h1><RouterLink to="/">ListTalk</RouterLink></h1>
     </section>
     <section class="flex items-center gap-4">
+      <button @click="translateStore.handleSwitch">
+        <AiOutlineTranslation />
+      </button>
       <button @click="theme.toggleTheme" :class="{ hidden: !isNavShow }">
         <template v-if="theme.theme === 'dark'">
           <CiLight />

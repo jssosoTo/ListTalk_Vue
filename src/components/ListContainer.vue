@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import Mask from '@/Mask.vue'
 import { useMaskStore } from '@/stores/mask'
-import { ref, watch } from 'vue'
+import { inject, ref, watch } from 'vue'
 import { AiOutlinePlus } from 'vue-icons-plus/ai'
 import { SiTicktick } from 'vue-icons-plus/si'
 import Modal from './Modal.vue'
 import Divider from './Divider.vue'
 import Dream from '@/assets/Dream.png'
+import type { TranslateTextType } from '@/types'
 
 defineProps({
   title: {
@@ -29,6 +30,10 @@ const emit = defineEmits<{
   (e: 'reload'): void
   (e: 'defineClick'): void
 }>()
+const translateText = inject<TranslateTextType>(
+  'translateText',
+  (title: string) => title,
+)
 
 const maskStore = useMaskStore()
 const isModalShow = ref<boolean>(false)
@@ -58,7 +63,9 @@ watch(isModalShow, () => {
           v-if="isTaskNumShow"
           class="flex items-center gap-2 pl-1 shade-text"
         >
-          <SiTicktick class="w-3" /><span> {{ taskNum }}个任务 </span>
+          <SiTicktick class="w-3" /><span>
+            {{ taskNum }} {{ translateText('task') }}
+          </span>
         </div>
         <div
           class="inline-flex items-center gap-2 mt-2 addBtn cursor-pointer"
@@ -66,7 +73,7 @@ watch(isModalShow, () => {
         >
           <template v-if="!isDefineButton">
             <button><AiOutlinePlus /></button>
-            <span>添加任务</span>
+            <span>{{ translateText('addTask') }}</span>
           </template>
           <template v-else>
             <slot name="button"></slot>
@@ -84,7 +91,9 @@ watch(isModalShow, () => {
               <h2 class="text-center text-xl font-extrabold">
                 To do or not to do
               </h2>
-              <h4 class="text-center text-gray-400">添加任务来开始你的项目</h4>
+              <h4 class="text-center text-gray-400">
+                {{ translateText('addStart') }}
+              </h4>
             </div>
           </div>
         </slot>

@@ -1,9 +1,14 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from 'vue'
+import { inject, onMounted, onUnmounted, ref } from 'vue'
 import ContentModal from './ContentModal.vue'
+import type { TranslateTextType } from '@/types'
 
 defineProps(['title'])
 const emit = defineEmits(['onConfirm'])
+const translateText = inject<TranslateTextType>(
+  'translateText',
+  (title: string) => title,
+)
 
 const isShow = ref<boolean>(false)
 
@@ -29,7 +34,9 @@ onUnmounted(() => window.removeEventListener('click', closeModal))
       >
         <h4 class="mb-2 text-lg">{{ title }}</h4>
         <div class="flex justify-end gap-1">
-          <button class="cancel_btn" @click="isShow = false">取消</button>
+          <button class="cancel_btn" @click="isShow = false">
+            {{ translateText('cancel') }}
+          </button>
           <button
             type="submit"
             class="submit_btn"
@@ -40,7 +47,7 @@ onUnmounted(() => window.removeEventListener('click', closeModal))
               }
             "
           >
-            确认
+            {{ translateText('confirm') }}
           </button>
         </div>
         <div class="arrow-circle"></div>

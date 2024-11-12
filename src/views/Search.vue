@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, toValue, useTemplateRef } from 'vue'
+import { computed, inject, onMounted, ref, toValue, useTemplateRef } from 'vue'
 import Dream from '@/assets/Dream.png'
 import Divider from '@/components/Divider.vue'
 import { IpSearch } from 'vue-icons-plus/ip'
@@ -7,7 +7,7 @@ import TaskItem from '@/components/TaskItem.vue'
 import { useAlertStore } from '@/stores/alert'
 import dayjs from 'dayjs'
 import { useReloadStore } from '@/stores/reload'
-import type { ListProp } from '@/types'
+import type { ListProp, TranslateTextType } from '@/types'
 
 defineProps({
   title: {
@@ -32,6 +32,10 @@ const lists = ref<ListProp[]>(
 )
 const alertStore = useAlertStore()
 const reloadStore = useReloadStore()
+const translateText = inject<TranslateTextType>(
+  'translateText',
+  (title: string) => title,
+)
 
 function checkedItem(id: number) {
   const newLists = lists.value.slice()
@@ -41,7 +45,7 @@ function checkedItem(id: number) {
   item.clearTime = dayjs().add(30, 'days').format('YYYY-MM-DD HH:mm:ss')
   localStorage.setItem('allLists', JSON.stringify(newLists))
   lists.value = newLists
-  alertStore.openAlert('1个任务已完成', id)
+  alertStore.openAlert(translateText('finishedTask'), id)
 }
 
 function reload() {
@@ -66,7 +70,7 @@ onMounted(() => inputRef.value?.focus())
     <header class="px-2 py-4"></header>
     <main style="padding: 0 25%" class="flex-1 w-full mx-auto flex flex-col">
       <div class="sticky top-0 header">
-        <h1 class="title">搜索</h1>
+        <h1 class="title">{{ translateText('search') }}</h1>
         <div class="Input">
           <button>
             <IpSearch />
@@ -96,10 +100,10 @@ onMounted(() => inputRef.value?.focus())
               To do or not to do
             </h2>
             <h4 v-show="text.length" class="text-center text-gray-400">
-              没有与"<span class="text-red-600">{{
+              {{ translateText('notMatch') }} "<span class="text-red-600">{{
                 text.length > 20 ? text.slice(0, 20) + '...' : text
               }}</span
-              >"匹配的任务
+              >"
             </h4>
           </div>
         </div>
