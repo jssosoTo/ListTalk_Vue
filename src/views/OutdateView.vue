@@ -31,7 +31,7 @@ function checkedItem(id: number) {
   item.clearTime = dayjs().add(30, 'days').format('YYYY-MM-DD HH:mm:ss')
   localStorage.setItem('allLists', JSON.stringify(newLists))
   lists.value = newLists
-  alertStore.openAlert('1个任务已完成', id)
+  alertStore.openAlert(translateText('finishedTask'), id)
 }
 
 function checkedAllItems() {
@@ -49,7 +49,7 @@ function checkedAllItems() {
 
   localStorage.setItem('allLists', JSON.stringify(newLists))
   lists.value = newLists
-  alertStore.openAlert('全部过时任务都已完成', 6657, true)
+  alertStore.openAlert(translateText('allOutdatedFinished'), 6657, true)
 }
 
 reloadStore.changeReload(reload)

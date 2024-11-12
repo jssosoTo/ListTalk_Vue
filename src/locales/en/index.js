@@ -46,4 +46,5 @@ export default {
   createProject: 'Add new project',
   finishedTask: '1 task has been completed',
   notMatch: 'There are no tasks that match',
+  allOutdatedFinished: 'All outdated tasks have been completed',
 }

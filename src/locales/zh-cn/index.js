@@ -45,4 +45,5 @@ export default {
   createProject: '新建项目',
   finishedTask: '1个任务已完成',
   notMatch: '没有匹配到',
+  allOutdatedFinished: '全部过时任务都已完成',
 }
